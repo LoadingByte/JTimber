@@ -22,7 +22,6 @@ import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
@@ -58,8 +57,9 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
      */
     private final class InsertParentWatcherMethodAdapter extends MethodVisitor {
 
-        private static final String PARENT_AWARE_CLASS         = "com/quartercode/jtimber/api/node/ParentAware";
-        private static final String PARENT_WATCHER_METHOD_DESC = "(Lcom/quartercode/jtimber/api/node/Node;)V";
+        private static final String API_PCKG           = "com/quartercode/jtimber/api";
+        private static final String PARENT_AWARE_CLASS = API_PCKG + "/node/ParentAware";
+        private static final String NODE_DESC          = "L" + API_PCKG + "/node/Node;";
 
         private InsertParentWatcherMethodAdapter(MethodVisitor mv) {
 
@@ -69,58 +69,63 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 
-            if (opcode == PUTFIELD) {
-                // Write a remove parent instruction to consider any old parent-aware object stored in the field
-                visitParentWatcherMethodCall(owner, name, desc, "removeParent");
+            // Note that the instructions inside this block make sure to reconstruct the "input" stack
+            if (opcode == PUTFIELD && Type.getType(desc).getSort() == Type.OBJECT) {
+                /*
+                 * If a parent-aware object is already present in the field, remove "this" from its parents.
+                 */
+
+                // Push the old object from the accessed field
+                super.visitVarInsn(ALOAD, 0);
+                super.visitFieldInsn(GETFIELD, owner, name, desc);
+
+                // Write a remove parent instruction set that uses the recently pushed "old" object
+                visitParentWatcherMethodCall("removeParent");
+
+                // Discard the "old" field value pushed earlier
+                super.visitInsn(POP);
+
+                /*
+                 * If the new object is parent-aware (and not null), add this objects to its parents.
+                 */
+
+                // Write an add parent instruction set that uses the "new" object already on the stack
+                // No popping is necessary afterwards because the "new" object will be used by the next instruction
+                visitParentWatcherMethodCall("addParent");
             }
 
             // Write the actual field instruction by calling the next visitor
             super.visitFieldInsn(opcode, owner, name, desc);
-
-            if (opcode == PUTFIELD) {
-                // Write an add parent instruction to consider any new parent-aware object stored in the field
-                visitParentWatcherMethodCall(owner, name, desc, "addParent");
-            }
         }
 
-        /*
-         * Inserts the bytecode for adding/removing the currently processed node class to/from the parents list of the described field.
-         * Additional or removal can be selected by passing "addParent" or "removeParent" as the last argument.
-         */
-        private void visitParentWatcherMethodCall(String fieldOwner, String fieldName, String fieldDesc, String methodName) {
+        private void visitParentWatcherMethodCall(String methodName) {
 
-            Type fieldType = Type.getType(fieldDesc);
+            // Note: The top value of the stack must be the value to process
 
-            // If the accessed field contains objects and not primitives
-            if (fieldType.getSort() == Type.OBJECT) {
-                // Push the accessed field by reading it from "this"
-                super.visitVarInsn(Opcodes.ALOAD, 0);
-                super.visitFieldInsn(GETFIELD, fieldOwner, fieldName, fieldDesc);
+            Label end = new Label();
 
-                // Test whether the accessed field is not null and parent-aware
+            /* if (object instanceof ParentAware) */
+            {
+                // Condition (see above)
+                super.visitInsn(DUP);
                 super.visitTypeInsn(INSTANCEOF, PARENT_AWARE_CLASS);
-
-                // Jump over the parent watcher method call if the accessed field is null or not parent-aware
-                Label end = new Label();
                 super.visitJumpInsn(IFEQ, end);
 
-                // Parent watcher method call
+                // Block: Actual parent watcher method call
                 {
-                    // Push the accessed field by reading it from "this" and cast it to the "ParentAware" interface
-                    super.visitVarInsn(Opcodes.ALOAD, 0);
-                    super.visitFieldInsn(GETFIELD, fieldOwner, fieldName, fieldDesc);
-                    super.visitTypeInsn(CHECKCAST, PARENT_AWARE_CLASS);
+                    // Push a copy of the value because the parent watcher method will be invoked on it
+                    super.visitInsn(DUP);
 
-                    // Push "this" because it will be used as the first argument
-                    super.visitVarInsn(Opcodes.ALOAD, 0);
+                    // Push "this" because it will be used as the first argument for the following method call
+                    super.visitVarInsn(ALOAD, 0);
 
-                    // Invoke the method on the accessed field using "this" as the first argument
-                    super.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, methodName, PARENT_WATCHER_METHOD_DESC, true);
+                    // Invoke the parent watcher method on the value (which implements the "ParentAware" interface) using "this" as the first argument
+                    super.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, methodName, "(" + NODE_DESC + ")V", true);
                 }
-
-                // Marks the end of the parent watcher method call
-                super.visitLabel(end);
             }
+
+            // Marks the end of the parent watcher method call
+            super.visitLabel(end);
         }
 
     }
