@@ -58,7 +58,9 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
         super.addParent(parent);
 
         for (E element : wrapped) {
-            element.addParent(parent);
+            if (element != null) {
+                element.addParent(parent);
+            }
         }
     }
 
@@ -68,7 +70,9 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
         super.removeParent(parent);
 
         for (E element : wrapped) {
-            element.removeParent(parent);
+            if (element != null) {
+                element.removeParent(parent);
+            }
         }
     }
 
