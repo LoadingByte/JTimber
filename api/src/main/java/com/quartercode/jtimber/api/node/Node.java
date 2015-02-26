@@ -19,14 +19,16 @@
 package com.quartercode.jtimber.api.node;
 
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
+import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
+import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
 
 /**
  * Each tree node of any object tree which uses this framework must implement this interface.
  * That allows the node to be referenced as parent by other {@link ParentAware} objects.
- * For implementing that functionality, all references from a node to parent-aware objects are tracked using bytecode generated at runtime.
- * Additionally, the {@link Wrapper} mechanism is used to track references through collections etc.<br>
+ * For implementing that functionality, all <b>direct</b> references from a node to parent-aware objects are tracked using bytecode generated at runtime (arrays are not considered).
+ * Additionally, the {@link Wrapper} mechanism is used to track references through arrays (see {@link ArrayWrapper}), collections (see {@link CollectionWrapper}), etc.<br>
  * <br>
- * Note that each node is parent-aware as well! That means that nodes also known the nodes that reference them (aka their parents).
+ * Note that each node is parent-aware as well! That means that nodes also known the nodes that reference them (alias their parents).
  * Also note that a default implementation of this interface is provided: {@link DefaultNode}.
  */
 public interface Node extends ParentAware {
