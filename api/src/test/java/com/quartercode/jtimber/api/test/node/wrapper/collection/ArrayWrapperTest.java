@@ -45,6 +45,27 @@ public class ArrayWrapperTest {
     }
 
     @Test
+    public void testAddParent() {
+
+        wrapper.set(0, elem1);
+        assertArrayEquals("Parents of element 1 before addition of a third parent", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
+
+        Node<?> parent3 = new DefaultNode<>();
+        wrapper.addParent(parent3);
+        assertArrayEquals("Parents of element 1 after addition of a third parent", new Node[] { parent1, parent2, parent3 }, elem1.getParents().toArray());
+    }
+
+    @Test
+    public void testRemoveParent() {
+
+        wrapper.set(0, elem1);
+        assertArrayEquals("Parents of element 1 before removal of a parent", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
+
+        wrapper.removeParent(parent2);
+        assertArrayEquals("Parents of element 1 after addition of a parent", new Node[] { parent1 }, elem1.getParents().toArray());
+    }
+
+    @Test
     public void testSetWithIndex() {
 
         wrapper.set(0, elem1);

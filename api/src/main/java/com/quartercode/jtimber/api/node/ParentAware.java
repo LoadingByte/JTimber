@@ -18,7 +18,7 @@
 
 package com.quartercode.jtimber.api.node;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * A parent-aware object knows all {@link Node} that reference it in some way.
@@ -34,39 +34,40 @@ import java.util.Collection;
 public interface ParentAware {
 
     /**
-     * Returns all {@link Node}s that hold a reference to this parent-aware object in some way..
+     * Returns all {@link Node}s that hold a reference to this parent-aware object in some way.
      * Those nodes are also called "parents" of this object.
+     * If a parent node references this object multiple times, the returned list contains that parent node multiple times as well.
      * 
      * @return All nodes that reference this object.
      */
-    public Collection<Node> getParents();
+    public List<Node> getParents();
 
     /**
-     * Returns the amount of {@link Node}s that hold a reference to this parent-aware object in some way..
+     * Returns the amount of {@link Node}s that hold a reference to this parent-aware object in some way.
      * Those nodes are also called "parents" of this object.<br>
      * <br>
-     * Note that the result of this method should be the same as the {@link Collection#size() size} of the {@link #getParents() parents collection}.
+     * Note that the result of this method should be the same as the {@link List#size() size} of the {@link #getParents() parents list}.
      * 
      * @return The amount of nodes that reference this object.
      */
     public int getParentCount();
 
     /**
-     * <b>Internal</b> method for adding a parent {@link Node} to the {@link #getParents() parents collection}.
-     * As a result of this method call the given node <b>must</b> be added to the parents collection (if it isn't {@code null}).
-     * <b>Don't call this method if you don't have a reason to do it!</b>
+     * <b>Internal</b> method for adding a parent {@link Node} to the {@link #getParents() parents list}.
+     * As a result of this method call the given node <b>must</b> be added to the parents list (if it isn't {@code null}).
      * 
-     * @param parent The parent node to add to the parents collection.
+     * @param parent The parent node to add to the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      */
     public void addParent(Node parent);
 
     /**
-     * <b>Internal</b> method for removing a parent {@link Node} from the {@link #getParents() parents collection}.
-     * As a result of this method call the given node <b>must</b> be removed from the parents collection.
+     * <b>Internal</b> method for removing a parent {@link Node} from the {@link #getParents() parents list}.
+     * As a result of this method call the given node <b>must</b> be removed from the parents list (if it isn't {@code null}).
+     * The node must only be removed once; if it exists twice in the list, only one entry should be removed.
      * <b>Don't call this method if you don't have a reason to do it!</b>
      * 
-     * @param parent The parent node to remove from the parents collection.
+     * @param parent The parent node to remove from the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      */
     public void removeParent(Node parent);

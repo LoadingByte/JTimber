@@ -19,7 +19,6 @@
 package com.quartercode.jtimber.api.node;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class DefaultParentAware implements ParentAware {
     private final transient List<Node> parentsUnmodifiable = Collections.unmodifiableList(parents);
 
     @Override
-    public Collection<Node> getParents() {
+    public List<Node> getParents() {
 
         return parentsUnmodifiable;
     }
@@ -48,6 +47,11 @@ public class DefaultParentAware implements ParentAware {
 
     @Override
     public void addParent(Node parent) {
+
+        // Abort if the parent is null
+        if (parent == null) {
+            return;
+        }
 
         parents.add(parent);
     }

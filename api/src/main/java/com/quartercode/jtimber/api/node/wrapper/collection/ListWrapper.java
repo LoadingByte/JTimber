@@ -136,7 +136,7 @@ public class ListWrapper<E extends ParentAware> extends CollectionWrapper<E> imp
 
     /**
      * An internal {@link ListIterator} implementation that wraps around a real list iterator and adjusts the parents of added and removed elements.
-     * It extends the {@link IteratorWrapper} of {@link CollectionWrapper} in order to inherit its basic functionality.
+     * It extends the {@link CollectionWrapper.IteratorWrapper} in order to inherit its basic functionality.
      * 
      * @see ListWrapper
      */

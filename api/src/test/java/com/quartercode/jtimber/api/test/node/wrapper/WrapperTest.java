@@ -45,9 +45,15 @@ public class WrapperTest {
         assertTrue("Test setup error: Object 2 isn't equal to itself for some reason", object2.equals(object2));
         assertFalse("Test setup error: Two different objects are equal for some reason", object1.equals(object2));
 
+        assertFalse("Test setup error: Wrapper 1 is equal to an object it's not storing for some reason", wrapper1.equals(object2));
+        assertFalse("Test setup error: Wrapper 2 is equal to an object it's not storing for some reason", wrapper2.equals(object1));
+
         assertTrue("Wrapper 1 isn't equal to itself", wrapper1.equals(wrapper1));
         assertTrue("Wrapper 2 isn't equal to itself", wrapper2.equals(wrapper2));
         assertFalse("Wrappers 1 and 2 are equal although the shouldn't", wrapper1.equals(wrapper2));
+
+        assertTrue("Wrapper 1 isn't equal to the object it's storing", wrapper1.equals(object1));
+        assertTrue("Wrapper 2 isn't equal to the object it's storing", wrapper2.equals(object2));
 
         assertTrue("Wrappers aren't equal although they wrap around the same object ", wrapper1.equals(new Wrapper(object1)));
     }

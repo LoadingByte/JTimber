@@ -42,7 +42,7 @@ public class ArrayWrapper<E extends ParentAware> extends Wrapper {
 
         super(wrapped);
 
-        this.wrapped = wrapped;
+        this.wrapped = wrapped.clone();
     }
 
     // ----- ParentAware Overrides -----
