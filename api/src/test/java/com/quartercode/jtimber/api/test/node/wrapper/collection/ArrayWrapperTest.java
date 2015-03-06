@@ -50,7 +50,7 @@ public class ArrayWrapperTest {
         wrapper.set(0, elem1);
         assertArrayEquals("Parents of element 1 before addition of a third parent", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
 
-        Node<?> parent3 = new DefaultNode<>();
+        Node parent3 = new DefaultNode();
         wrapper.addParent(parent3);
         assertArrayEquals("Parents of element 1 after addition of a third parent", new Node[] { parent1, parent2, parent3 }, elem1.getParents().toArray());
     }
