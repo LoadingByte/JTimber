@@ -5,7 +5,7 @@
     <formats>
         <format>zip</format>
     </formats>
-    <baseDirectory>${project.artifactId}-${project.version}-bin</baseDirectory>
+    <baseDirectory>${project.artifactId}-${project.version}-dist</baseDirectory>
 
     <fileSets>
         <!-- Information -->
