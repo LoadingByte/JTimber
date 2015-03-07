@@ -30,8 +30,7 @@ public class ArrayWrapperTest {
     private final Node               parent1 = new DefaultNode();
     private final Node               parent2 = new DefaultNode();
 
-    private final Node[]             array   = new Node[2];
-    private final ArrayWrapper<Node> wrapper = new ArrayWrapper<>(array);
+    private final ArrayWrapper<Node> wrapper = new ArrayWrapper<>(new Node[2]);
 
     private final Node               elem1   = new DefaultNode();
     private final Node               elem2   = new DefaultNode();
@@ -71,7 +70,7 @@ public class ArrayWrapperTest {
         wrapper.set(0, elem1);
         wrapper.set(1, elem2);
 
-        assertArrayEquals("Array elements after first round of modifications", new Node[] { elem1, elem2 }, array);
+        assertArrayEquals("Array elements after first round of modifications", new Node[] { elem1, elem2 }, wrapper.cloneArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -80,7 +79,7 @@ public class ArrayWrapperTest {
         wrapper.set(0, null);
         wrapper.set(1, elem3);
 
-        assertArrayEquals("Array elements after second round of modifications", new Node[] { null, elem3 }, array);
+        assertArrayEquals("Array elements after second round of modifications", new Node[] { null, elem3 }, wrapper.cloneArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[0], elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[0], elem2.getParents().toArray());
