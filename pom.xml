@@ -18,6 +18,8 @@
         <module>compiler-hook</module>
         <!-- Runtime library for class modification -->
         <module>runtime-hook</module>
+        <!-- Packaged archive distribution -->
+        <module>package</module>
     </modules>
 
     <properties>
