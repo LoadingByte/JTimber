@@ -22,6 +22,7 @@ import java.util.Collection;
 import com.quartercode.jtimber.api.node.DefaultParentAware;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
+import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
 
@@ -42,8 +43,9 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * Internally, however, the list wrapper takes care of adjusting the parents of all parent-aware objects stored in the list.<br>
  * <br>
  * Note that this class is just a base class and does nothing on its own (apart from delegating {@link #hashCode()}, {@link #equals(Object)} and {@link #toString()} calls).
- * For any actual parent-caretaking functionality, you must use specific wrappers like {@link CollectionWrapper} or {@link ListWrapper}.
+ * For any actual parent-caretaking functionality, you must use specific wrappers like {@link ArrayWrapper}, {@link CollectionWrapper}, or {@link ListWrapper}.
  * 
+ * @see ArrayWrapper
  * @see CollectionWrapper
  * @see ListWrapper
  */

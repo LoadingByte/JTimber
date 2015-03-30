@@ -90,7 +90,7 @@ public class TimberIndexerAP extends AbstractProcessor {
     }
 
     /*
-     * Adds all node class elements from the given list to the index collection.
+     * Call "processClass" on all type elements from the given element list.
      * Then invokes itself recursively with all nested elements it can find.
      */
     private void processElements(Collection<? extends Element> elements) {
@@ -99,32 +99,41 @@ public class TimberIndexerAP extends AbstractProcessor {
             // Only parent-aware *classes* need to be indexed since the parent type limit is only relevant for actual classes
             // Moreover, only node *classes* need to be indexed since only they contain instruction that could possibly set parent-aware fields
             if (element.getKind() == ElementKind.CLASS) {
-                String binaryName = elementUtils.getBinaryName((TypeElement) element).toString();
-                TypeMirror elementType = element.asType();
-
-                if (typeUtils.isAssignable(typeUtils.erasure(elementType), paTypeErasure)) {
-                    // Resolve the generic type argument for ParentAware.<P> declared by the parent-aware class
-                    TypeMirror implPaType = getImplementedPATypeMirror(elementType);
-                    TypeMirror allowedParentType = ((DeclaredType) implPaType).getTypeArguments().get(0); // Argument for the generic type parameter ParentAware.<P>
-
-                    // If ParentAware.<P> is another type variable, resolve that one
-                    if (allowedParentType instanceof TypeVariable) {
-                        allowedParentType = ((TypeVariable) allowedParentType).getUpperBound();
-                    }
-
-                    // Add the parent-aware class and its allowed parent type (declared in ParentAware.<P>) to the index
-                    paIndex.add(binaryName + ":" + elementUtils.getBinaryName((TypeElement) typeUtils.asElement(allowedParentType)).toString());
-
-                    // The class can only be a node if it is parent-aware
-                    if (typeUtils.isAssignable(typeUtils.erasure(elementType), nodeTypeErasure)) {
-                        // Add the node class to the index
-                        nodeIndex.add(binaryName);
-                    }
-                }
+                processClass((TypeElement) element);
             }
 
             // Process all nested elements
             processElements(element.getEnclosedElements());
+        }
+    }
+
+    /*
+     * If the given type element represents a parent-aware class, this method adds it and the generic type argument of its <P> parameter to the PA index.
+     * If the given type element represents a node, this method adds it to the node index.
+     */
+    private void processClass(TypeElement element) {
+
+        String binaryName = elementUtils.getBinaryName(element).toString();
+        TypeMirror elementType = element.asType();
+
+        if (typeUtils.isAssignable(typeUtils.erasure(elementType), paTypeErasure)) {
+            // Resolve the generic type argument for ParentAware.<P> declared by the parent-aware class
+            TypeMirror implPaType = getImplementedPATypeMirror(elementType);
+            TypeMirror allowedParentType = ((DeclaredType) implPaType).getTypeArguments().get(0);
+
+            // If ParentAware.<P> is another type variable, resolve that one
+            if (allowedParentType instanceof TypeVariable) {
+                allowedParentType = ((TypeVariable) allowedParentType).getUpperBound();
+            }
+
+            // Add the parent-aware class and its allowed parent type (declared in ParentAware.<P>) to the index
+            paIndex.add(binaryName + ":" + elementUtils.getBinaryName((TypeElement) typeUtils.asElement(allowedParentType)).toString());
+
+            // The class can only be a node if it is parent-aware
+            if (typeUtils.isAssignable(typeUtils.erasure(elementType), nodeTypeErasure)) {
+                // Add the node class to the index
+                nodeIndex.add(binaryName);
+            }
         }
     }
 

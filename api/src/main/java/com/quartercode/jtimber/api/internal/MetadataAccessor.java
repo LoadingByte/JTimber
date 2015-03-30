@@ -48,19 +48,24 @@ public class MetadataAccessor {
         String paIndexPath = "/META-INF/jtimber/parentAwares.index";
         try (ResourceLister resourceLister = new ResourceLister(paIndexPath, false)) {
             for (Path paIndexResource : resourceLister.getResourcePaths()) {
-                try (BufferedReader in = Files.newBufferedReader(paIndexResource, Charset.forName("UTF-8"))) {
-                    String line;
-                    while ( (line = in.readLine()) != null) {
-                        parsePAIndexLine(paIndexResource, line);
-                    }
-                } catch (IOException e) {
-                    LOGGER.error("Cannot read lines from specific index file ('{}')", paIndexResource, e);
-                }
+                parsePAIndex(paIndexResource);
             }
         } catch (IOException e) {
             LOGGER.error("Cannot read index files from '{}'", paIndexPath, e);
         }
 
+    }
+
+    private static void parsePAIndex(Path paIndexResource) {
+
+        try (BufferedReader in = Files.newBufferedReader(paIndexResource, Charset.forName("UTF-8"))) {
+            String line;
+            while ( (line = in.readLine()) != null) {
+                parsePAIndexLine(paIndexResource, line);
+            }
+        } catch (IOException e) {
+            LOGGER.error("Cannot read lines from specific index file ('{}')", paIndexResource, e);
+        }
     }
 
     private static void parsePAIndexLine(Path paIndexResource, String line) {
