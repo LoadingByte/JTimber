@@ -34,7 +34,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @see Collection
  * @see Wrapper
  */
-public class CollectionWrapper<E extends ParentAware> extends Wrapper implements Collection<E> {
+public class CollectionWrapper<E extends ParentAware<?>> extends Wrapper implements Collection<E> {
 
     private final Collection<E> wrapped;
 
@@ -53,7 +53,7 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
     // ----- ParentAware Overrides -----
 
     @Override
-    public void addParent(Node parent) {
+    public void addParent(Node<?> parent) {
 
         super.addParent(parent);
 
@@ -65,7 +65,7 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
     }
 
     @Override
-    public void removeParent(Node parent) {
+    public void removeParent(Node<?> parent) {
 
         super.removeParent(parent);
 
@@ -84,10 +84,10 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
      * 
      * @param element The element that is added to the underlying collection.
      */
-    protected void addElement(ParentAware element) {
+    protected void addElement(ParentAware<?> element) {
 
         if (element != null) {
-            for (Node parent : getParents()) {
+            for (Node<?> parent : getParents()) {
                 element.addParent(parent);
             }
         }
@@ -99,10 +99,10 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
      * 
      * @param element The element that is removed from the underlying collection.
      */
-    protected void removeElement(ParentAware element) {
+    protected void removeElement(ParentAware<?> element) {
 
         if (element != null) {
-            for (Node parent : getParents()) {
+            for (Node<?> parent : getParents()) {
                 element.removeParent(parent);
             }
         }
@@ -134,7 +134,7 @@ public class CollectionWrapper<E extends ParentAware> extends Wrapper implements
         boolean modified = wrapped.remove(o);
 
         if (modified && o instanceof ParentAware) {
-            removeElement((ParentAware) o);
+            removeElement((ParentAware<?>) o);
         }
 
         return modified;

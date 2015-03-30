@@ -21,20 +21,25 @@ package com.quartercode.jtimber.api.node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.quartercode.jtimber.api.internal.MetadataAccessor;
 
 /**
  * The default implementation of the {@link ParentAware} interface.
  * It stores the parent collection using an {@link ArrayList}, held in a {@code transient} field.
  * 
+ * @param <P> The type of {@link Node}s that are able to be parents of this parent-aware object.
+ *        Note that all parents are verified against this type at runtime.
+ *        Only parent nodes which are a compatible with this type are allowed.
+ * 
  * @see ParentAware
  */
-public class DefaultParentAware implements ParentAware {
+public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
 
-    private final transient List<Node> parents             = new ArrayList<>();
-    private final transient List<Node> parentsUnmodifiable = Collections.unmodifiableList(parents);
+    private final transient List<P> parents             = new ArrayList<>();
+    private final transient List<P> parentsUnmodifiable = Collections.unmodifiableList(parents);
 
     @Override
-    public List<Node> getParents() {
+    public List<P> getParents() {
 
         return parentsUnmodifiable;
     }
@@ -45,19 +50,24 @@ public class DefaultParentAware implements ParentAware {
         return parents.size();
     }
 
+    @SuppressWarnings ("unchecked")
     @Override
-    public void addParent(Node parent) {
+    public void addParent(Node<?> parent) {
 
-        // Abort if the parent is null
-        if (parent == null) {
-            return;
+        if (parent != null) {
+            boolean allowedParent = MetadataAccessor.getAllowedParentClass(getClass()).isAssignableFrom(parent.getClass());
+
+            if (allowedParent) {
+                // This unchecked cast cannot be avoided; however, the check above should have filtered out any disallowed parent
+                parents.add((P) parent);
+            } else {
+                throw new IllegalParentTypeException(this, parent, "Nodes of type '" + parent.getClass().getName() + "' are not allowed to reference parent-aware objects of type '" + getClass().getName() + "'");
+            }
         }
-
-        parents.add(parent);
     }
 
     @Override
-    public void removeParent(Node parent) {
+    public void removeParent(Node<?> parent) {
 
         parents.remove(parent);
     }

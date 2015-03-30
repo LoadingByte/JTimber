@@ -36,7 +36,7 @@ public class WeakPAReferenceTest {
     @Test
     public void test() {
 
-        final ParentAware pa = context.mock(ParentAware.class);
+        final ParentAware<?> pa = context.mock(ParentAware.class);
 
         // @formatter:off
         context.checking(new Expectations() {{

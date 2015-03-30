@@ -33,7 +33,9 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -48,11 +50,17 @@ import javax.tools.StandardLocation;
 @SupportedAnnotationTypes ("*")
 public class TimberIndexerAP extends AbstractProcessor {
 
-    private Elements           elementUtils;
-    private Types              typeUtils;
-    private TypeMirror         nodeType;
+    private static final String FQCN_PARENT_AWARE = "com.quartercode.jtimber.api.node.ParentAware";
+    private static final String FQCN_NODE         = "com.quartercode.jtimber.api.node.Node";
 
-    private final List<String> nodeIndex = new ArrayList<>();
+    private Elements            elementUtils;
+    private Types               typeUtils;
+
+    private TypeMirror          paTypeErasure;
+    private TypeMirror          nodeTypeErasure;
+
+    private final List<String>  paIndex           = new ArrayList<>();
+    private final List<String>  nodeIndex         = new ArrayList<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -62,7 +70,9 @@ public class TimberIndexerAP extends AbstractProcessor {
         elementUtils = processingEnv.getElementUtils();
         typeUtils = processingEnv.getTypeUtils();
 
-        nodeType = elementUtils.getTypeElement("com.quartercode.jtimber.api.node.Node").asType();
+        // Any generic parameters are erased in order to be able to make proper assignabilty checks
+        paTypeErasure = typeUtils.erasure(elementUtils.getTypeElement(FQCN_PARENT_AWARE).asType());
+        nodeTypeErasure = typeUtils.erasure(elementUtils.getTypeElement(FQCN_NODE).asType());
     }
 
     @Override
@@ -86,12 +96,30 @@ public class TimberIndexerAP extends AbstractProcessor {
     private void processElements(Collection<? extends Element> elements) {
 
         for (Element element : elements) {
-            // Only node *classes* need to be indexed since only they contain instruction that could possibly set parent-aware fields
+            // Only parent-aware *classes* need to be indexed since the parent type limit is only relevant for actual classes
+            // Moreover, only node *classes* need to be indexed since only they contain instruction that could possibly set parent-aware fields
             if (element.getKind() == ElementKind.CLASS) {
                 String binaryName = elementUtils.getBinaryName((TypeElement) element).toString();
+                TypeMirror elementType = element.asType();
 
-                if (typeUtils.isSubtype(element.asType(), nodeType)) {
-                    nodeIndex.add(binaryName);
+                if (typeUtils.isAssignable(typeUtils.erasure(elementType), paTypeErasure)) {
+                    // Resolve the generic type argument for ParentAware.<P> declared by the parent-aware class
+                    TypeMirror implPaType = getImplementedPATypeMirror(elementType);
+                    TypeMirror allowedParentType = ((DeclaredType) implPaType).getTypeArguments().get(0); // Argument for the generic type parameter ParentAware.<P>
+
+                    // If ParentAware.<P> is another type variable, resolve that one
+                    if (allowedParentType instanceof TypeVariable) {
+                        allowedParentType = ((TypeVariable) allowedParentType).getUpperBound();
+                    }
+
+                    // Add the parent-aware class and its allowed parent type (declared in ParentAware.<P>) to the index
+                    paIndex.add(binaryName + ":" + elementUtils.getBinaryName((TypeElement) typeUtils.asElement(allowedParentType)).toString());
+
+                    // The class can only be a node if it is parent-aware
+                    if (typeUtils.isAssignable(typeUtils.erasure(elementType), nodeTypeErasure)) {
+                        // Add the node class to the index
+                        nodeIndex.add(binaryName);
+                    }
                 }
             }
 
@@ -100,8 +128,37 @@ public class TimberIndexerAP extends AbstractProcessor {
         }
     }
 
+    /*
+     * Given an arbitrary type which somehow implements "ParentAware", this method returns a type mirror which represents the "implemented ParentAware interface" for exactly that type.
+     * The returned mirror can then be used to extract the generic type argument for the generic type parameter <P>.
+     */
+    private TypeMirror getImplementedPATypeMirror(TypeMirror paType) {
+
+        // Retrieve all direct supertypes ("extends" and "implements") of the current parent-aware type
+        List<? extends TypeMirror> supertypes = typeUtils.directSupertypes(paType);
+
+        // If one of the supertypes is the "ParentAware" interface, return the mirror which represents that interface
+        for (TypeMirror supertype : supertypes) {
+            if ( ((TypeElement) typeUtils.asElement(supertype)).getQualifiedName().toString().equals(FQCN_PARENT_AWARE)) {
+                return supertype;
+            }
+        }
+
+        // If the current type doesn't directly implement "ParentAware", call this method on all found supertypes and return the first result
+        for (TypeMirror supertype : supertypes) {
+            TypeMirror result = getImplementedPATypeMirror(supertype);
+
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     private void generateResults() {
 
+        writeListToFile("META-INF/jtimber/parentAwares.index", paIndex);
         writeListToFile("META-INF/jtimber/nodes.index", nodeIndex);
     }
 

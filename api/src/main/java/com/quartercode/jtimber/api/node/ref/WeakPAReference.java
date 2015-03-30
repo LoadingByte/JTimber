@@ -31,7 +31,7 @@ import com.quartercode.jtimber.api.node.ParentAware;
  * 
  * @param <T> The exact type of {@link ParentAware} object referenced by the weak PA reference.
  */
-public class WeakPAReference<T extends ParentAware> {
+public class WeakPAReference<T extends ParentAware<?>> {
 
     private final WeakReference<T> reference;
 

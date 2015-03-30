@@ -28,10 +28,14 @@ import java.util.List;
  * Note that each node is parent-aware as well!
  * Also note that a default implementation of this interface is provided: {@link DefaultParentAware}.
  * 
+ * @param <P> The type of {@link Node}s that are able to be parents of this parent-aware object.
+ *        Note that all parents are verified against this type at runtime.
+ *        Only parent nodes which are a compatible with this type are allowed.
+ * 
  * @see DefaultParentAware
  * @see Node
  */
-public interface ParentAware {
+public interface ParentAware<P extends Node<?>> {
 
     /**
      * Returns all {@link Node}s that hold a reference to this parent-aware object in some way.
@@ -40,7 +44,7 @@ public interface ParentAware {
      * 
      * @return All nodes that reference this object.
      */
-    public List<Node> getParents();
+    public List<P> getParents();
 
     /**
      * Returns the amount of {@link Node}s that hold a reference to this parent-aware object in some way.
@@ -54,12 +58,18 @@ public interface ParentAware {
 
     /**
      * <b>Internal</b> method for adding a parent {@link Node} to the {@link #getParents() parents list}.
-     * As a result of this method call the given node <b>must</b> be added to the parents list (if it isn't {@code null}).
+     * As a result of this method call the given node <b>must</b> be added to the parents list (if it isn't {@code null} or disallowed).
+     * The node must even be added if it already exists.
+     * <b>Don't call this method if you don't have a reason to do it!</b><br>
+     * <br>
+     * Note that this method enforces the type limit imposed by the generic type parameter {@code <P>}.
+     * All nodes which are not compatible (same type or subtype) with that generic type parameter cause an exception to be thrown.
+     * However, this method still accepts all nodes in order to make the implementation of wrappers easier.
      * 
      * @param parent The parent node to add to the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      */
-    public void addParent(Node parent);
+    public void addParent(Node<?> parent);
 
     /**
      * <b>Internal</b> method for removing a parent {@link Node} from the {@link #getParents() parents list}.
@@ -70,6 +80,6 @@ public interface ParentAware {
      * @param parent The parent node to remove from the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      */
-    public void removeParent(Node parent);
+    public void removeParent(Node<?> parent);
 
 }

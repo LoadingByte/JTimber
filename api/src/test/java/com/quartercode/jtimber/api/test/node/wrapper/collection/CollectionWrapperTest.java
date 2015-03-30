@@ -31,15 +31,15 @@ import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
 
 public class CollectionWrapperTest {
 
-    private final Node                    parent1    = new DefaultNode();
-    private final Node                    parent2    = new DefaultNode();
+    private final Node<?>                    parent1    = new DefaultNode<>();
+    private final Node<?>                    parent2    = new DefaultNode<>();
 
-    private final Collection<Node>        collection = new ArrayList<>();
-    private final CollectionWrapper<Node> wrapper    = new CollectionWrapper<>(collection);
+    private final Collection<Node<?>>        collection = new ArrayList<>();
+    private final CollectionWrapper<Node<?>> wrapper    = new CollectionWrapper<>(collection);
 
-    private final Node                    elem1      = new DefaultNode();
-    private final Node                    elem2      = new DefaultNode();
-    private final Node                    elem3      = new DefaultNode();
+    private final Node<?>                    elem1      = new DefaultNode<>();
+    private final Node<?>                    elem2      = new DefaultNode<>();
+    private final Node<?>                    elem3      = new DefaultNode<>();
 
     @Before
     public void setUp() {
@@ -54,7 +54,7 @@ public class CollectionWrapperTest {
         wrapper.add(elem1);
         assertArrayEquals("Parents of element 1 before addition of a third parent", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
 
-        Node parent3 = new DefaultNode();
+        Node<?> parent3 = new DefaultNode<>();
         wrapper.addParent(parent3);
         assertArrayEquals("Parents of element 1 after addition of a third parent", new Node[] { parent1, parent2, parent3 }, elem1.getParents().toArray());
     }
@@ -75,7 +75,7 @@ public class CollectionWrapperTest {
         wrapper.add(elem1);
         wrapper.add(elem2);
 
-        Iterator<Node> it1 = wrapper.iterator();
+        Iterator<Node<?>> it1 = wrapper.iterator();
         assertTrue(it1.hasNext());
         assertEquals(elem1, it1.next());
         assertTrue(it1.hasNext());
@@ -87,7 +87,7 @@ public class CollectionWrapperTest {
         assertArrayEquals("Parents of element 1 after first iteration", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after first iteration", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
 
-        Iterator<Node> it2 = wrapper.iterator();
+        Iterator<Node<?>> it2 = wrapper.iterator();
         it2.next();
         it2.remove();
 

@@ -13,6 +13,13 @@
     <description>The API that is used to access the features of the framework. It doesn't contain any hacky stuff.</description>
 
     <dependencies>
+        <!-- Compiler Hook -->
+        <dependency>
+            <groupId>com.quartercode</groupId>
+            <artifactId>jtimber-compiler-hook</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

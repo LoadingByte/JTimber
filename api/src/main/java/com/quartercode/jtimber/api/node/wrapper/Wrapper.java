@@ -20,6 +20,7 @@ package com.quartercode.jtimber.api.node.wrapper;
 
 import java.util.Collection;
 import com.quartercode.jtimber.api.node.DefaultParentAware;
+import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
@@ -46,7 +47,7 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * @see CollectionWrapper
  * @see ListWrapper
  */
-public class Wrapper extends DefaultParentAware {
+public class Wrapper extends DefaultParentAware<Node<?>> {
 
     private final Object wrapped;
 

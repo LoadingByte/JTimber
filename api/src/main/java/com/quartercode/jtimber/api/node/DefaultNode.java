@@ -22,9 +22,13 @@ package com.quartercode.jtimber.api.node;
  * The default implementation of the {@link Node} interface.
  * It just delegates to the {@link DefaultParentAware} implementation.
  * 
+ * @param <P> The type of {@link Node}s that are able to be parents of this node.
+ *        Note that all parents are verified against this type at runtime.
+ *        Only parent nodes which are a compatible with this type are allowed.
+ * 
  * @see Node
  * @see DefaultParentAware
  */
-public class DefaultNode extends DefaultParentAware implements Node {
+public class DefaultNode<P extends Node<?>> extends DefaultParentAware<P> implements Node<P> {
 
 }

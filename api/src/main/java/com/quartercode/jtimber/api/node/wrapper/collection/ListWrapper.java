@@ -35,7 +35,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @see List
  * @see Wrapper
  */
-public class ListWrapper<E extends ParentAware> extends CollectionWrapper<E> implements List<E> {
+public class ListWrapper<E extends ParentAware<?>> extends CollectionWrapper<E> implements List<E> {
 
     private final List<E> wrapped;
 

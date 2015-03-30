@@ -31,15 +31,15 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
 
 public class ListWrapperTest {
 
-    private final Node              parent1 = new DefaultNode();
-    private final Node              parent2 = new DefaultNode();
+    private final Node<?>              parent1 = new DefaultNode<>();
+    private final Node<?>              parent2 = new DefaultNode<>();
 
-    private final List<Node>        list    = new ArrayList<>();
-    private final ListWrapper<Node> wrapper = new ListWrapper<>(list);
+    private final List<Node<?>>        list    = new ArrayList<>();
+    private final ListWrapper<Node<?>> wrapper = new ListWrapper<>(list);
 
-    private final Node              elem1   = new DefaultNode();
-    private final Node              elem2   = new DefaultNode();
-    private final Node              elem3   = new DefaultNode();
+    private final Node<?>              elem1   = new DefaultNode<>();
+    private final Node<?>              elem2   = new DefaultNode<>();
+    private final Node<?>              elem3   = new DefaultNode<>();
 
     @Before
     public void setUp() {
@@ -107,7 +107,7 @@ public class ListWrapperTest {
         wrapper.add(elem2);
 
         // Only next iteration
-        ListIterator<Node> it1 = wrapper.listIterator();
+        ListIterator<Node<?>> it1 = wrapper.listIterator();
         assertEquals(0, it1.nextIndex());
         assertTrue(it1.hasNext());
         assertEquals(elem1, it1.next());
@@ -118,7 +118,7 @@ public class ListWrapperTest {
         assertFalse(it1.hasNext());
 
         // Next and previous iteration
-        ListIterator<Node> it2 = wrapper.listIterator();
+        ListIterator<Node<?>> it2 = wrapper.listIterator();
         it2.next();
         it2.next();
         assertEquals(2, it2.nextIndex());
@@ -139,7 +139,7 @@ public class ListWrapperTest {
         assertArrayEquals("Parents of element 2 after the first two iterations", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
 
         // Iteration with modifications
-        ListIterator<Node> it3 = wrapper.listIterator();
+        ListIterator<Node<?>> it3 = wrapper.listIterator();
         it3.next();
         assertEquals(1, it3.nextIndex());
         it3.remove(); // Remove elem1

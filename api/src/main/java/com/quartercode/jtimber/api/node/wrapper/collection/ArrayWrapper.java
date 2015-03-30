@@ -29,7 +29,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @param <E> The type of elements in the wrapped one-dimensional array.
  * @see Wrapper
  */
-public class ArrayWrapper<E extends ParentAware> extends Wrapper {
+public class ArrayWrapper<E extends ParentAware<?>> extends Wrapper {
 
     private final E[] wrapped;
 
@@ -48,7 +48,7 @@ public class ArrayWrapper<E extends ParentAware> extends Wrapper {
     // ----- ParentAware Overrides -----
 
     @Override
-    public void addParent(Node parent) {
+    public void addParent(Node<?> parent) {
 
         super.addParent(parent);
 
@@ -60,7 +60,7 @@ public class ArrayWrapper<E extends ParentAware> extends Wrapper {
     }
 
     @Override
-    public void removeParent(Node parent) {
+    public void removeParent(Node<?> parent) {
 
         super.removeParent(parent);
 
@@ -105,7 +105,7 @@ public class ArrayWrapper<E extends ParentAware> extends Wrapper {
         E oldValue = wrapped[index];
 
         // Change the parents of the affected elements
-        for (Node parent : getParents()) {
+        for (Node<?> parent : getParents()) {
             if (oldValue != null) {
                 oldValue.removeParent(parent);
             }

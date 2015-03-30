@@ -30,7 +30,11 @@ import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
  * <br>
  * Note that each node is parent-aware as well! That means that nodes also known the nodes that reference them (alias their parents).
  * Also note that a default implementation of this interface is provided: {@link DefaultNode}.
+ * 
+ * @param <P> The type of {@link Node}s that are able to be parents of this node.
+ *        Note that all parents are verified against this type at runtime.
+ *        Only parent nodes which are a compatible with this type are allowed.
  */
-public interface Node extends ParentAware {
+public interface Node<P extends Node<?>> extends ParentAware<P> {
 
 }

@@ -27,14 +27,14 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
 
 public class ArrayWrapperTest {
 
-    private final Node               parent1 = new DefaultNode();
-    private final Node               parent2 = new DefaultNode();
+    private final Node<?>               parent1 = new DefaultNode<>();
+    private final Node<?>               parent2 = new DefaultNode<>();
 
-    private final ArrayWrapper<Node> wrapper = new ArrayWrapper<>(new Node[2]);
+    private final ArrayWrapper<Node<?>> wrapper = new ArrayWrapper<>(new Node<?>[2]);
 
-    private final Node               elem1   = new DefaultNode();
-    private final Node               elem2   = new DefaultNode();
-    private final Node               elem3   = new DefaultNode();
+    private final Node<?>               elem1   = new DefaultNode<>();
+    private final Node<?>               elem2   = new DefaultNode<>();
+    private final Node<?>               elem3   = new DefaultNode<>();
 
     @Before
     public void setUp() {
@@ -49,7 +49,7 @@ public class ArrayWrapperTest {
         wrapper.set(0, elem1);
         assertArrayEquals("Parents of element 1 before addition of a third parent", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
 
-        Node parent3 = new DefaultNode();
+        Node<?> parent3 = new DefaultNode<>();
         wrapper.addParent(parent3);
         assertArrayEquals("Parents of element 1 after addition of a third parent", new Node[] { parent1, parent2, parent3 }, elem1.getParents().toArray());
     }
