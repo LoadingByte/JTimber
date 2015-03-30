@@ -55,7 +55,7 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
     /*
      * The method adapter internally used by the InsertParentWatcherClassAdapter.
      */
-    private final class InsertParentWatcherMethodAdapter extends MethodVisitor {
+    private static final class InsertParentWatcherMethodAdapter extends MethodVisitor {
 
         private static final String API_PCKG           = "com/quartercode/jtimber/api";
         private static final String PARENT_AWARE_CLASS = API_PCKG + "/node/ParentAware";

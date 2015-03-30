@@ -21,7 +21,7 @@ package com.quartercode.jtimber.api.node;
 import java.util.List;
 
 /**
- * A parent-aware object knows all {@link Node} that reference it in some way.
+ * A parent-aware object knows all {@link Node}s that reference it in some way.
  * Those nodes are also called "parents".
  * The framework implements different ways to track these parents, including bytecode manipulation at runtime.<br>
  * <br>
