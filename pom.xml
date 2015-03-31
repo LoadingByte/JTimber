@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
 
     <name>JTimber</name>
-    <url>http://www.quartercode.com</url>
+    <url>http://quartercode.com/wiki/JTimber</url>
     <description>JTimber is a framework that supports the creation of complex Java object trees by introducing concepts like object parent storage.</description>
     <inceptionYear>2015</inceptionYear>
 
@@ -37,7 +37,7 @@
 
     <organization>
         <name>QuarterCode</name>
-        <url>http://www.quartercode.com</url>
+        <url>http://quartercode.com</url>
     </organization>
 
     <developers>
