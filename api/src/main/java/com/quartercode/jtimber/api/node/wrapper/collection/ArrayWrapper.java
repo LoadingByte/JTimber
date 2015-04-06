@@ -20,6 +20,7 @@ package com.quartercode.jtimber.api.node.wrapper.collection;
 
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
+import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
@@ -29,7 +30,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @param <E> The type of elements in the wrapped one-dimensional array.
  * @see Wrapper
  */
-public class ArrayWrapper<E extends ParentAware<?>> extends Wrapper {
+public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
 
     private final E[] wrapped;
 

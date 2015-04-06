@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
+import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
@@ -34,7 +35,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @see Collection
  * @see Wrapper
  */
-public class CollectionWrapper<E extends ParentAware<?>> extends Wrapper implements Collection<E> {
+public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper implements Collection<E> {
 
     private final Collection<E> wrapped;
 

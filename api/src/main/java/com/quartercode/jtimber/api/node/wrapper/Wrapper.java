@@ -19,7 +19,6 @@
 package com.quartercode.jtimber.api.node.wrapper;
 
 import java.util.Collection;
-import com.quartercode.jtimber.api.node.DefaultParentAware;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
@@ -40,29 +39,24 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * </pre>
  * 
  * The user doesn't notice any difference and uses the list like any other list.
- * Internally, however, the list wrapper takes care of adjusting the parents of all parent-aware objects stored in the list.<br>
- * <br>
- * Note that this class is just a base class and does nothing on its own (apart from delegating {@link #hashCode()}, {@link #equals(Object)} and {@link #toString()} calls).
- * For any actual parent-caretaking functionality, you must use specific wrappers like {@link ArrayWrapper}, {@link CollectionWrapper}, or {@link ListWrapper}.
+ * Internally, however, the list wrapper takes care of adjusting the parents of all parent-aware objects stored in the list.
  * 
+ * @see AbstractWrapper
  * @see ArrayWrapper
  * @see CollectionWrapper
  * @see ListWrapper
  */
-public class Wrapper extends DefaultParentAware<Node<?>> {
-
-    private final Object wrapped;
+public interface Wrapper extends ParentAware<Node<?>> {
 
     /**
-     * Creates a new generic wrapper that wraps around the given object and only delegates {@link #hashCode()}, {@link #equals(Object)} and {@link #toString()} calls
-     * to the wrapped object.
+     * Returns the object the wrapper wraps around.
+     * Note that this method should only be used for internal purposes.
+     * Public access should be done through the custom methods provided by the wrapper implementation.
+     * Otherwise, the wrapper functionality is bypassed and inconsistencies start to occur.
      * 
-     * @param wrapped The object the new generic wrapper wraps around.
+     * @return The wrapped object.
      */
-    public Wrapper(Object wrapped) {
-
-        this.wrapped = wrapped;
-    }
+    public Object getInternallyWrapped();
 
     /**
      * Returns the {@link Object#hashCode() hash code} of the wrapped object.
@@ -70,10 +64,7 @@ public class Wrapper extends DefaultParentAware<Node<?>> {
      * @return The hash code of the wrapped object.
      */
     @Override
-    public int hashCode() {
-
-        return wrapped.hashCode();
-    }
+    public int hashCode();
 
     /**
      * Returns whether the given object {@link Object#equals(Object) equals} this object.
@@ -83,10 +74,7 @@ public class Wrapper extends DefaultParentAware<Node<?>> {
      * @return Whether the given object is equal to this object.
      */
     @Override
-    public boolean equals(Object obj) {
-
-        return wrapped.equals(obj instanceof Wrapper ? ((Wrapper) obj).wrapped : obj);
-    }
+    public boolean equals(Object obj);
 
     /**
      * Returns the {@link Object#hashCode() string representation} of the wrapped object.
@@ -94,9 +82,6 @@ public class Wrapper extends DefaultParentAware<Node<?>> {
      * @return The string representation of the wrapped object.
      */
     @Override
-    public String toString() {
-
-        return wrapped.toString();
-    }
+    public String toString();
 
 }

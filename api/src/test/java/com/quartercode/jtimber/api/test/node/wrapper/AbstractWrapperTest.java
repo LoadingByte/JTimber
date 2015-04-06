@@ -20,15 +20,15 @@ package com.quartercode.jtimber.api.test.node.wrapper;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import com.quartercode.jtimber.api.node.wrapper.Wrapper;
+import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
 
-public class WrapperTest {
+public class AbstractWrapperTest {
 
     @Test
     public void testHashCode() {
 
         Object object = new Object();
-        Wrapper wrapper = new Wrapper(object);
+        AbstractWrapper wrapper = new TestWrapper(object);
 
         assertEquals("Hash code of wrapper", object.hashCode(), wrapper.hashCode());
     }
@@ -38,8 +38,8 @@ public class WrapperTest {
 
         Object object1 = new Object();
         Object object2 = new Object();
-        Wrapper wrapper1 = new Wrapper(object1);
-        Wrapper wrapper2 = new Wrapper(object2);
+        AbstractWrapper wrapper1 = new TestWrapper(object1);
+        AbstractWrapper wrapper2 = new TestWrapper(object2);
 
         assertTrue("Test setup error: Object 1 isn't equal to itself for some reason", object1.equals(object1));
         assertTrue("Test setup error: Object 2 isn't equal to itself for some reason", object2.equals(object2));
@@ -55,16 +55,25 @@ public class WrapperTest {
         assertTrue("Wrapper 1 isn't equal to the object it's storing", wrapper1.equals(object1));
         assertTrue("Wrapper 2 isn't equal to the object it's storing", wrapper2.equals(object2));
 
-        assertTrue("Wrappers aren't equal although they wrap around the same object ", wrapper1.equals(new Wrapper(object1)));
+        assertTrue("Wrappers aren't equal although they wrap around the same object ", wrapper1.equals(new TestWrapper(object1)));
     }
 
     @Test
     public void testToString() {
 
         Object object = new Object();
-        Wrapper wrapper = new Wrapper(object);
+        AbstractWrapper wrapper = new TestWrapper(object);
 
         assertEquals("String representation of wrapper", object.toString(), wrapper.toString());
+    }
+
+    private static class TestWrapper extends AbstractWrapper {
+
+        protected TestWrapper(Object wrapped) {
+
+            super(wrapped);
+        }
+
     }
 
 }
