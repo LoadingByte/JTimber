@@ -19,6 +19,7 @@
 package com.quartercode.jtimber.api.node.wrapper;
 
 import java.util.Collection;
+import java.util.List;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
@@ -57,6 +58,19 @@ public interface Wrapper extends ParentAware<Node<?>> {
      * @return The wrapped object.
      */
     public Object getInternallyWrapped();
+
+    /**
+     * Returns the objects represented by the wrapper.
+     * For example, if the wrapper wraps around a collection, this method would return all elements of that collection.<br>
+     * <br>
+     * Note that this method should not further resolve the actual children.
+     * To continue the example, this method should not check whether any of the elements is another wrapper and add the children of that wrapper.
+     * Instead, it should just add the wrapper element itself.
+     * This behavior has been chosen for efficiency reasons.
+     * 
+     * @return The objects represented by the wrapper.
+     */
+    public List<Object> getActualChildren();
 
     /**
      * Returns the {@link Object#hashCode() hash code} of the wrapped object.

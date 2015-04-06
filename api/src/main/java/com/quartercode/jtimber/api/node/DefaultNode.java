@@ -18,9 +18,13 @@
 
 package com.quartercode.jtimber.api.node;
 
+import java.util.List;
+
 /**
  * The default implementation of the {@link Node} interface.
- * It just delegates to the {@link DefaultParentAware} implementation.
+ * The child accessors are overridden for each implementation of {@link Node} (not only DefaultNode) at runtime.
+ * Therefore, this class just provides empty dummy methods which do nothing (because they will be removed at runtime).
+ * For the implementation of {@link ParentAware} functionality, it just extends the {@link DefaultParentAware} implementation.
  * 
  * @param <P> The type of {@link Node}s that are able to be parents of this node.
  *        Note that all parents are verified against this type at runtime.
@@ -30,5 +34,21 @@ package com.quartercode.jtimber.api.node;
  * @see DefaultParentAware
  */
 public class DefaultNode<P extends Node<?>> extends DefaultParentAware<P> implements Node<P> {
+
+    /*
+     * The following two methods are just dummies and will be overridden at runtime.
+     */
+
+    @Override
+    public List<Object> getChildren() {
+
+        return null;
+    }
+
+    @Override
+    public int getChildCount() {
+
+        return 0;
+    }
 
 }

@@ -18,6 +18,7 @@
 
 package com.quartercode.jtimber.api.node;
 
+import java.util.List;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
@@ -29,12 +30,35 @@ import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
  * Additionally, the {@link Wrapper} mechanism is used to track references through arrays (see {@link ArrayWrapper}), collections (see {@link CollectionWrapper}), etc.<br>
  * <br>
  * Note that each node is parent-aware as well! That means that nodes also known the nodes that reference them (alias their parents).
- * Also note that a default implementation of this interface is provided: {@link DefaultNode}.
+ * Also note that a default implementation of this interface is provided: {@link DefaultNode}.<br>
+ * <br>
+ * Additionally, each node provides the {@link #getChildren()} method which returns all non-null attribute values of the node class.
+ * Moreover, the {@link #getChildCount()} method returns just the amount of non-null attributes and is a lot faster.
+ * Note that {@link Wrapper}s are properly resolved by those methods.
  * 
  * @param <P> The type of {@link Node}s that are able to be parents of this node.
  *        Note that all parents are verified against this type at runtime.
  *        Only parent nodes which are a compatible with this type are allowed.
  */
 public interface Node<P extends Node<?>> extends ParentAware<P> {
+
+    /**
+     * Returns the values of all non-null attributes this class and all superclasses have.
+     * Note that all objects and primitives are included in the returned list.
+     * 
+     * @return All non-null attributes of this class and all superclasses.
+     */
+    public List<Object> getChildren();
+
+    /**
+     * Returns the amount of non-null attributes this class and all superclasses have.
+     * Note that all object and primitive attributes are included for the final result.<br>
+     * <br>
+     * Note that the result of this method should be the same as the {@link List#size() size} of the {@link #getChildren() children list}.
+     * However, this method is probably is faster.
+     * 
+     * @return The amount of non-null attributes this class and all superclasses have.
+     */
+    public int getChildCount();
 
 }

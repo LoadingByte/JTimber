@@ -18,6 +18,8 @@
 
 package com.quartercode.jtimber.api.node.wrapper.collection;
 
+import java.util.Arrays;
+import java.util.List;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
@@ -44,6 +46,14 @@ public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
         super(wrapped);
 
         this.wrapped = wrapped.clone();
+    }
+
+    // ----- Wrapper Methods -----
+
+    @Override
+    public List<Object> getActualChildren() {
+
+        return Arrays.asList((Object[]) wrapped);
     }
 
     // ----- ParentAware Overrides -----

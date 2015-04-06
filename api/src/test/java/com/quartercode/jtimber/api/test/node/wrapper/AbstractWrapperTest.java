@@ -19,6 +19,7 @@
 package com.quartercode.jtimber.api.test.node.wrapper;
 
 import static org.junit.Assert.*;
+import java.util.List;
 import org.junit.Test;
 import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
 
@@ -72,6 +73,13 @@ public class AbstractWrapperTest {
         protected TestWrapper(Object wrapped) {
 
             super(wrapped);
+        }
+
+        // Dummy; not used
+        @Override
+        public List<Object> getActualChildren() {
+
+            return null;
         }
 
     }

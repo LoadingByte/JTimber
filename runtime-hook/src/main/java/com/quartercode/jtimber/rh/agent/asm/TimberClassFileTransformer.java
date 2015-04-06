@@ -49,7 +49,7 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
 
-        // Only transform actual nodes because only they are able to be parents
+        // Only transform actual nodes because only they are able to be parents and have children
         if (!nodeIndex.contains(className)) {
             return bytes;
         }
@@ -57,12 +57,13 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         // Writer
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
-        // Transformer
-        InsertParentWatcherClassAdapter transformer = new InsertParentWatcherClassAdapter(writer);
+        // Transformers
+        InsertChildAccessorsClassAdapter transformer2 = new InsertChildAccessorsClassAdapter(writer, nodeIndex);
+        InsertParentWatcherClassAdapter transformer1 = new InsertParentWatcherClassAdapter(transformer2);
 
         // Reader
         ClassReader reader = new ClassReader(bytes);
-        reader.accept(transformer, 0);
+        reader.accept(transformer1, 0);
 
         return writer.toByteArray();
     }
