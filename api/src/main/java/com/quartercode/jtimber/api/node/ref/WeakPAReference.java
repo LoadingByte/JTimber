@@ -19,6 +19,7 @@
 package com.quartercode.jtimber.api.node.ref;
 
 import java.lang.ref.WeakReference;
+import javax.xml.bind.annotation.XmlTransient;
 import com.quartercode.jtimber.api.node.ParentAware;
 
 /**
@@ -31,6 +32,7 @@ import com.quartercode.jtimber.api.node.ParentAware;
  * 
  * @param <T> The exact type of {@link ParentAware} object referenced by the weak PA reference.
  */
+@XmlTransient
 public class WeakPAReference<T extends ParentAware<?>> {
 
     private final WeakReference<T> reference;

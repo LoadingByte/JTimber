@@ -58,7 +58,9 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
         // Transformers
-        InsertChildAccessorsClassAdapter transformer2 = new InsertChildAccessorsClassAdapter(writer, nodeIndex);
+        // It is important that the InsertParentWatcherClassAdapter is located before the InsertJAXBTweaksClassAdapter
+        InsertJAXBTweaksClassAdapter transformer3 = new InsertJAXBTweaksClassAdapter(writer);
+        InsertChildAccessorsClassAdapter transformer2 = new InsertChildAccessorsClassAdapter(transformer3, nodeIndex);
         InsertParentWatcherClassAdapter transformer1 = new InsertParentWatcherClassAdapter(transformer2);
 
         // Reader

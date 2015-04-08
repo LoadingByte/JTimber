@@ -20,6 +20,7 @@ package com.quartercode.jtimber.api.node.wrapper.collection;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.xml.bind.annotation.XmlTransient;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
@@ -27,11 +28,15 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
  * A {@link Wrapper} around a one-dimensional array of any type.
- * See {@link Wrapper} for more details on what wrappers are and what they are used for.
+ * See {@link Wrapper} for more details on what wrappers are and what they are used for.<br>
+ * <br>
+ * <b>Important note:</b> This wrapper doesn't support JAXB persistence (yet).
+ * If you need that feature, use collections and the {@link CollectionWrapper} (or subclasses for lists etc.) instead.
  * 
  * @param <E> The type of elements in the wrapped one-dimensional array.
  * @see Wrapper
  */
+@XmlTransient
 public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
 
     private final E[] wrapped;
