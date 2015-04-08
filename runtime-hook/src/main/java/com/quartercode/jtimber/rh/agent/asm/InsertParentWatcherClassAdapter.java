@@ -20,9 +20,9 @@ package com.quartercode.jtimber.rh.agent.asm;
 
 import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
+import com.quartercode.jtimber.rh.agent.util.ASMUtils;
 
 /**
  * The {@link ClassVisitor} which adds so called "parent watchers" to nodes in order to track the parents of parent-aware objects.
@@ -57,10 +57,6 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
      */
     private static final class InsertParentWatcherMethodAdapter extends MethodVisitor {
 
-        private static final String API_PCKG           = "com/quartercode/jtimber/api";
-        private static final String PARENT_AWARE_CLASS = API_PCKG + "/node/ParentAware";
-        private static final String NODE_DESC          = "L" + API_PCKG + "/node/Node;";
-
         private InsertParentWatcherMethodAdapter(MethodVisitor mv) {
 
             super(ASM5, mv);
@@ -80,7 +76,7 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
                 super.visitFieldInsn(GETFIELD, owner, name, desc);
 
                 // Write a remove parent instruction set that uses the recently pushed "old" object
-                visitParentWatcherMethodCall("removeParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(mv, "removeParent");
 
                 // Discard the "old" field value pushed earlier
                 super.visitInsn(POP);
@@ -91,41 +87,11 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
 
                 // Write an add parent instruction set that uses the "new" object already on the stack
                 // No popping is necessary afterwards because the "new" object will be used by the next instruction
-                visitParentWatcherMethodCall("addParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(mv, "addParent");
             }
 
             // Write the actual field instruction by calling the next visitor
             super.visitFieldInsn(opcode, owner, name, desc);
-        }
-
-        private void visitParentWatcherMethodCall(String methodName) {
-
-            // Note: The top value of the stack must be the value to process
-
-            Label end = new Label();
-
-            /* if (object instanceof ParentAware) */
-            {
-                // Condition (see above)
-                super.visitInsn(DUP);
-                super.visitTypeInsn(INSTANCEOF, PARENT_AWARE_CLASS);
-                super.visitJumpInsn(IFEQ, end);
-
-                // Block: Actual parent watcher method call
-                {
-                    // Push a copy of the value because the parent watcher method will be invoked on it
-                    super.visitInsn(DUP);
-
-                    // Push "this" because it will be used as the first argument for the following method call
-                    super.visitVarInsn(ALOAD, 0);
-
-                    // Invoke the parent watcher method on the value (which implements the "ParentAware" interface) using "this" as the first argument
-                    super.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, methodName, "(" + NODE_DESC + ")V", true);
-                }
-            }
-
-            // Marks the end of the parent watcher method call
-            super.visitLabel(end);
         }
 
     }

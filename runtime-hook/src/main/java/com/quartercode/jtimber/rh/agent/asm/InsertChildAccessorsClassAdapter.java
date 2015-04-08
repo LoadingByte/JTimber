@@ -29,6 +29,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
+import com.quartercode.jtimber.rh.agent.util.ASMUtils;
 
 /**
  * The {@link ClassVisitor} which adds so called "child accessors" to nodes in order to make the children of such nodes (their attributes) available through a convenient method.
@@ -135,7 +136,7 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
             // ----- Stack: [list, list]
 
             // Push the current field value
-            pushField(mg, field.getLeft(), fieldType);
+            ASMUtils.generateGetField(mg, classType, field.getLeft(), fieldType);
 
             // ----- Stack: [list, list, fieldValue]
 
@@ -168,7 +169,7 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
         // Increment the counter for all fields which are not null
         for (Pair<String, Type> field : fields) {
             // Push the current field value
-            pushField(mg, field.getLeft(), field.getRight());
+            ASMUtils.generateGetField(mg, classType, field.getLeft(), field.getRight());
 
             // ----- Stack: [counter, fieldValue]
 
@@ -188,18 +189,6 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
         mg.returnValue();
 
         mg.endMethod();
-    }
-
-    // ----- Common -----
-
-    private void pushField(GeneratorAdapter mg, String fieldName, Type fieldType) {
-
-        // Push the object stored in the field
-        mg.loadThis();
-        mg.getField(classType, fieldName, fieldType);
-
-        // Box the object in case it is a primitive
-        mg.box(fieldType);
     }
 
 }
