@@ -89,7 +89,7 @@ public final class InsertJAXBTweaksClassAdapter extends ClassVisitor {
             private Type wrapperType;
             private Type wrapperConstructorArgType;
 
-            public AnnotationVisitorImpl(AnnotationVisitor av) {
+            private AnnotationVisitorImpl(AnnotationVisitor av) {
 
                 super(ASM5, av);
             }
@@ -121,7 +121,7 @@ public final class InsertJAXBTweaksClassAdapter extends ClassVisitor {
         // This field visitor just "invokes" the AnnotationVisitorImpl with each found "SubstituteWithWrapper" annotation
         final class FieldVisitorImpl extends FieldVisitor {
 
-            public FieldVisitorImpl(FieldVisitor fv) {
+            private FieldVisitorImpl(FieldVisitor fv) {
 
                 super(ASM5, fv);
             }
