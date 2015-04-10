@@ -42,11 +42,16 @@ public class WeakPAReference<T extends ParentAware<?>> {
      * See {@link WeakPAReference} for more information on what a weak PA reference is.
      * Note that a weak PA reference is immutable; because of that, the referenced PA cannot be changed after the reference has been constructed.
      * 
-     * @param pa The parent-aware object which should be referenced by the new weak PA reference.
+     * @param referent The parent-aware object which should be referenced by the new weak PA reference.
+     *        Note that {@code null} is disallowed.
      */
-    public WeakPAReference(T pa) {
+    public WeakPAReference(T referent) {
 
-        reference = new WeakReference<>(pa);
+        if (referent == null) {
+            throw new IllegalArgumentException("Weak ParentAware reference cannot reference null");
+        }
+
+        reference = new WeakReference<>(referent);
     }
 
     /**
@@ -57,13 +62,13 @@ public class WeakPAReference<T extends ParentAware<?>> {
      */
     public T get() {
 
-        T pa = reference.get();
+        T referent = reference.get();
 
-        if (pa != null && pa.getParentCount() == 0) {
+        if (referent != null && referent.getParentCount() == 0) {
             reference.clear();
             return null;
         } else {
-            return pa;
+            return referent;
         }
     }
 
