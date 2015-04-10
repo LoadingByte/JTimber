@@ -7,7 +7,7 @@ More information can be found on the [wiki page](http://quartercode.com/wiki/JTi
 License
 -------
 
-Copyright (c) 2014 QuarterCode <http://quartercode.com/>
+Copyright (c) 2015 QuarterCode <http://quartercode.com/>
 
 JTimber may be used under the terms of the GNU Lesser General Public License (LGPL) v3.0. See the LICENSE.md file or https://www.gnu.org/licenses/lgpl-3.0.txt for details.
 
@@ -30,5 +30,7 @@ Builds
 * Finished builds can be downloaded from the [QuarterCode DL website](http://quartercode.com/dl/projects/details?projectId=JTimber).
 * Builds are also available on the [QuarterCode maven repository](http://repo.quartercode.com).
 
-TODO: Usage
------------
+Usage
+-----
+
+For information on the usage of JTimber, visit the [wiki page](http://quartercode.com/wiki/JTimber).
