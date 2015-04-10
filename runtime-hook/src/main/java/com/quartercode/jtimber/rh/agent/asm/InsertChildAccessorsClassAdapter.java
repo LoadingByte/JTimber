@@ -45,8 +45,8 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
     private static final Method            FUNC_ADD_ACTUAL_CHILDREN_TO_LIST = Method.getMethod("void addActualChildrenToList (java.util.List, java.lang.Object)");
     private static final Method            FUNC_COUNT_ACTUAL_CHILDREN       = Method.getMethod("int countActualChildren (java.lang.Object)");
 
-    private final Method                   GET_CHILDREN_METHOD              = Method.getMethod("java.util.List getChildren ()");
-    private final Method                   GET_CHILD_COUNT_METHOD           = Method.getMethod("int getChildCount ()");
+    private static final Method            GET_CHILDREN_METHOD              = Method.getMethod("java.util.List getChildren ()");
+    private static final Method            GET_CHILD_COUNT_METHOD           = Method.getMethod("int getChildCount ()");
 
     private final Set<String>              nodeIndex;
 
@@ -59,6 +59,7 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
      * Creates a new insert child accessors class adapter.
      * 
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
+     * @param nodeIndex The index that marks which classes are nodes.
      */
     public InsertChildAccessorsClassAdapter(ClassVisitor cv, Set<String> nodeIndex) {
 

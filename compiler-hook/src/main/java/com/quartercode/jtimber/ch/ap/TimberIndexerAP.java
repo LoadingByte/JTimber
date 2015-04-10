@@ -70,7 +70,7 @@ public class TimberIndexerAP extends AbstractProcessor {
         elementUtils = processingEnv.getElementUtils();
         typeUtils = processingEnv.getTypeUtils();
 
-        // Any generic parameters are erased in order to be able to make proper assignabilty checks
+        // Any generic parameters are erased in order to be able to make proper assignability checks
         paTypeErasure = typeUtils.erasure(elementUtils.getTypeElement(FQCN_PARENT_AWARE).asType());
         nodeTypeErasure = typeUtils.erasure(elementUtils.getTypeElement(FQCN_NODE).asType());
     }

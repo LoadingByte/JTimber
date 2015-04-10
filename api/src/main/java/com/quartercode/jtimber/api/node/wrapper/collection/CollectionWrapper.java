@@ -36,6 +36,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @param <E> The type of elements in the wrapped collection.
  * @see Collection
  * @see Wrapper
+ * @see ListWrapper
  */
 public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper implements Collection<E> {
 

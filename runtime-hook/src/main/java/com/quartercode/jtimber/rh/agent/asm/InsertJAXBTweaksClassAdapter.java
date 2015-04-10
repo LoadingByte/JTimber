@@ -107,14 +107,14 @@ public final class InsertJAXBTweaksClassAdapter extends ClassVisitor {
                     }
                 }
 
-            };
+            }
 
             @Override
             public void visitEnd() {
 
                 fieldsForWrapperSubstitution.add(Triple.of(name, wrapperType, wrapperConstructorArgType));
 
-            };
+            }
 
         }
 

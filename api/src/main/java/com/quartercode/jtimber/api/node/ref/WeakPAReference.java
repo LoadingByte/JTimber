@@ -28,7 +28,7 @@ import com.quartercode.jtimber.api.node.ParentAware;
  * Note that an object which holds a weak PA reference doesn't count as a parent of the referenced parent-aware object.<br>
  * <br>
  * Also note that the referenced object is stored using a {@link WeakReference}.
- * That means that the object can be garbage collected, even if the parent count is wrong for some reason.
+ * That means that the object can be garbage-collected even if the parent count is wrong for some reason.
  * 
  * @param <T> The exact type of {@link ParentAware} object referenced by the weak PA reference.
  */

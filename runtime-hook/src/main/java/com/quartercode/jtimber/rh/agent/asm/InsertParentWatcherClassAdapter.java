@@ -44,7 +44,7 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-        // Return an InsertParentWatcherClassAdapter
+        // Return an InsertParentWatcherMethodAdapter
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if (mv != null) {
             mv = new InsertParentWatcherMethodAdapter(mv);

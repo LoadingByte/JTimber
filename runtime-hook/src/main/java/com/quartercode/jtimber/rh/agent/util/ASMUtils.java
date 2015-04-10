@@ -65,10 +65,10 @@ public class ASMUtils {
     public static void generateAddOrRemoveThisAsParent(MethodVisitor mv, String methodName) {
 
         // Skip the if-block if the condition below isn't true
-        Label if_end = new Label();
+        Label endIf = new Label();
         mv.visitInsn(DUP);
         mv.visitTypeInsn(INSTANCEOF, PARENT_AWARE_CLASS);
-        mv.visitJumpInsn(IFEQ, if_end);
+        mv.visitJumpInsn(IFEQ, endIf);
 
         /* if (object instanceof ParentAware) */
         {
@@ -82,7 +82,7 @@ public class ASMUtils {
             mv.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, methodName, "(" + NODE_DESC + ")V", true);
         }
 
-        mv.visitLabel(if_end);
+        mv.visitLabel(endIf);
     }
 
     private ASMUtils() {

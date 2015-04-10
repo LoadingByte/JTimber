@@ -51,6 +51,7 @@ public interface ParentAware<P extends Node<?>> {
      * Those nodes are also called "parents" of this object.<br>
      * <br>
      * Note that the result of this method should be the same as the {@link List#size() size} of the {@link #getParents() parents list}.
+     * However, this method probably is faster.
      * 
      * @return The amount of nodes that reference this object.
      */
