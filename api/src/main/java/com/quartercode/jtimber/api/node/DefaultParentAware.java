@@ -21,7 +21,7 @@ package com.quartercode.jtimber.api.node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.quartercode.jtimber.api.internal.MetadataAccessor;
+import net.jodah.typetools.TypeResolver;
 
 /**
  * The default implementation of the {@link ParentAware} interface.
@@ -55,7 +55,8 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
     public void addParent(Node<?> parent) {
 
         if (parent != null) {
-            boolean allowedParent = MetadataAccessor.getAllowedParentClass(getClass()).isAssignableFrom(parent.getClass());
+            Class<?> allowedParentClass = TypeResolver.resolveRawArgument(ParentAware.class, getClass());
+            boolean allowedParent = allowedParentClass.isAssignableFrom(parent.getClass());
 
             if (allowedParent) {
                 // This unchecked cast cannot be avoided; however, the check above should have filtered out any disallowed parent
