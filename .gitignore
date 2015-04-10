@@ -3,6 +3,7 @@
 ##########
 
 target/
+dependency-reduced-pom.xml
 
 
 ############
@@ -22,6 +23,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.factorypath
 
 # External tool builders
 .externalToolBuilders/

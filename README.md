@@ -2,12 +2,12 @@ JTimber
 =======
 
 JTimber is a framework that supports the creation of complex Java object trees by introducing concepts like object parent storage.
-More information can be found on the [wiki page](http://quartercode.com/wiki/index.php?title=JTimber).
+More information can be found on the [wiki page](http://quartercode.com/wiki/JTimber).
 
 License
 -------
 
-Copyright (c) 2014 QuarterCode <http://www.quartercode.com/>
+Copyright (c) 2014 QuarterCode <http://quartercode.com/>
 
 JTimber may be used under the terms of the GNU Lesser General Public License (LGPL) v3.0. See the LICENSE.md file or https://www.gnu.org/licenses/lgpl-3.0.txt for details.
 

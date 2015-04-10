@@ -3,34 +3,42 @@
 
     <groupId>com.quartercode</groupId>
     <artifactId>jtimber</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
 
     <name>JTimber</name>
-    <url>http://www.quartercode.com</url>
+    <url>http://quartercode.com/wiki/JTimber</url>
     <description>JTimber is a framework that supports the creation of complex Java object trees by introducing concepts like object parent storage.</description>
     <inceptionYear>2015</inceptionYear>
 
     <modules>
         <!-- API for accessing the framework features -->
         <module>api</module>
-        <!-- Java agent for class modification -->
-        <module>agent</module>
+        <!-- Annotation processor for the compiler -->
+        <module>compiler-hook</module>
+        <!-- Runtime library for class modification -->
+        <module>runtime-hook</module>
+        <!-- Packaged archive distribution -->
+        <module>package</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Global dependencies -->
-        <commons-lang3.version>3.3.2</commons-lang3.version>
-        <slf4j.version>1.7.7</slf4j.version>
         <junit.version>4.11</junit.version>
         <jmock.version>2.6.0</jmock.version>
+
+        <!-- Child dependencies -->
+        <commons-lang3.version>3.3.2</commons-lang3.version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <typetools.version>0.4.0</typetools.version>
+        <asm.version>5.0.3</asm.version>
     </properties>
 
     <organization>
         <name>QuarterCode</name>
-        <url>http://www.quartercode.com</url>
+        <url>http://quartercode.com</url>
     </organization>
 
     <developers>
@@ -44,8 +52,8 @@
 
     <licenses>
         <license>
-            <name>GNU General Public License Version 3</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <name>GNU Lesser General Public License Version 3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>
 
@@ -77,20 +85,6 @@
     </distributionManagement>
 
     <dependencies>
-        <!-- Utility -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -214,5 +208,24 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- Shade JAR -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
