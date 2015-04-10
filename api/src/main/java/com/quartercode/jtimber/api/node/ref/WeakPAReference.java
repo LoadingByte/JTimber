@@ -19,7 +19,9 @@
 package com.quartercode.jtimber.api.node.ref;
 
 import java.lang.ref.WeakReference;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlValue;
 import com.quartercode.jtimber.api.node.ParentAware;
 
 /**
@@ -28,14 +30,21 @@ import com.quartercode.jtimber.api.node.ParentAware;
  * Note that an object which holds a weak PA reference doesn't count as a parent of the referenced parent-aware object.<br>
  * <br>
  * Also note that the referenced object is stored using a {@link WeakReference}.
- * That means that the object can be garbage-collected even if the parent count is wrong for some reason.
+ * That means that the object can be garbage-collected even if the parent count is wrong for some reason.<br>
+ * <br>
+ * When it comes to JAXB persistence, the referenced parent-aware object is stored as a {@link XmlIDREF}.
+ * That means that the referent must have a {@link XmlID} property.
  * 
  * @param <T> The exact type of {@link ParentAware} object referenced by the weak PA reference.
  */
-@XmlTransient
 public class WeakPAReference<T extends ParentAware<?>> {
 
-    private final WeakReference<T> reference;
+    private WeakReference<T> reference;
+
+    // JAXB constructor
+    protected WeakPAReference() {
+
+    }
 
     /**
      * Creates a new weak PA reference which references the given {@link ParentAware} object.
@@ -70,6 +79,23 @@ public class WeakPAReference<T extends ParentAware<?>> {
         } else {
             return referent;
         }
+    }
+
+    /*
+     * JAXB accessors
+     */
+
+    @XmlIDREF
+    @XmlValue
+    protected Object getJAXBReferent() {
+
+        return get();
+    }
+
+    @SuppressWarnings ({ "unchecked" })
+    protected void setJAXBReferent(Object referent) {
+
+        this.reference = new WeakReference<>((T) referent);
     }
 
 }
