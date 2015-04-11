@@ -48,9 +48,10 @@ public class ArrayWrapper<E> extends AbstractWrapper {
      */
     public ArrayWrapper(E[] wrapped) {
 
-        super(wrapped);
+        // Sadly, this cannot be avoided
+        super(wrapped = wrapped.clone());
 
-        this.wrapped = wrapped.clone();
+        this.wrapped = wrapped;
     }
 
     // ----- Wrapper Methods -----
