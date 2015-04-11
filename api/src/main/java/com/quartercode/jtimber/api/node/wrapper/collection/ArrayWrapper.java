@@ -37,7 +37,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @see Wrapper
  */
 @XmlTransient
-public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
+public class ArrayWrapper<E> extends AbstractWrapper {
 
     private final E[] wrapped;
 
@@ -69,8 +69,8 @@ public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
         super.addParent(parent);
 
         for (E element : wrapped) {
-            if (element != null) {
-                element.addParent(parent);
+            if (element instanceof ParentAware) {
+                ((ParentAware<?>) element).addParent(parent);
             }
         }
     }
@@ -81,8 +81,8 @@ public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
         super.removeParent(parent);
 
         for (E element : wrapped) {
-            if (element != null) {
-                element.removeParent(parent);
+            if (element instanceof ParentAware) {
+                ((ParentAware<?>) element).removeParent(parent);
             }
         }
     }
@@ -122,12 +122,12 @@ public class ArrayWrapper<E extends ParentAware<?>> extends AbstractWrapper {
 
         // Change the parents of the affected elements
         for (Node<?> parent : getParents()) {
-            if (oldValue != null) {
-                oldValue.removeParent(parent);
+            if (oldValue instanceof ParentAware) {
+                ((ParentAware<?>) oldValue).removeParent(parent);
             }
 
-            if (value != null) {
-                value.addParent(parent);
+            if (value instanceof ParentAware) {
+                ((ParentAware<?>) value).addParent(parent);
             }
         }
 

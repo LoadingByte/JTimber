@@ -38,7 +38,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @see Wrapper
  * @see ListWrapper
  */
-public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper implements Collection<E> {
+public class CollectionWrapper<E> extends AbstractWrapper implements Collection<E> {
 
     private final Collection<E> wrapped;
 
@@ -71,8 +71,8 @@ public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper
         super.addParent(parent);
 
         for (E element : wrapped) {
-            if (element != null) {
-                element.addParent(parent);
+            if (element instanceof ParentAware) {
+                ((ParentAware<?>) element).addParent(parent);
             }
         }
     }
@@ -83,8 +83,8 @@ public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper
         super.removeParent(parent);
 
         for (E element : wrapped) {
-            if (element != null) {
-                element.removeParent(parent);
+            if (element instanceof ParentAware) {
+                ((ParentAware<?>) element).removeParent(parent);
             }
         }
     }
@@ -92,31 +92,31 @@ public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper
     // ----- Event Methods -----
 
     /**
-     * Internal method that should be called whenever a {@link ParentAware} object is added to the wrapped {@link Collection}.
-     * It adjusts the parents of that new element by adding the parents of this wrapper.
+     * Internal method that should be called whenever an object is added to the wrapped {@link Collection}.
+     * If the new object is {@link ParentAware}, this method adjusts the parents of that new element by adding the parents of this wrapper.
      * 
      * @param element The element that is added to the underlying collection.
      */
-    protected void addElement(ParentAware<?> element) {
+    protected void addElement(Object element) {
 
-        if (element != null) {
+        if (element instanceof ParentAware) {
             for (Node<?> parent : getParents()) {
-                element.addParent(parent);
+                ((ParentAware<?>) element).addParent(parent);
             }
         }
     }
 
     /**
-     * Internal method that should be called whenever a {@link ParentAware} object is removed from the wrapped {@link Collection}.
-     * It adjusts the parents of that element by removing the parents of this wrapper.
+     * Internal method that should be called whenever an object is removed from the wrapped {@link Collection}.
+     * If the removed object is {@link ParentAware}, this method adjusts the parents of that removed element by removing the parents of this wrapper.
      * 
      * @param element The element that is removed from the underlying collection.
      */
-    protected void removeElement(ParentAware<?> element) {
+    protected void removeElement(Object element) {
 
-        if (element != null) {
+        if (element instanceof ParentAware) {
             for (Node<?> parent : getParents()) {
-                element.removeParent(parent);
+                ((ParentAware<?>) element).removeParent(parent);
             }
         }
     }
@@ -147,7 +147,7 @@ public class CollectionWrapper<E extends ParentAware<?>> extends AbstractWrapper
         boolean modified = wrapped.remove(o);
 
         if (modified && o instanceof ParentAware) {
-            removeElement((ParentAware<?>) o);
+            removeElement(o);
         }
 
         return modified;
