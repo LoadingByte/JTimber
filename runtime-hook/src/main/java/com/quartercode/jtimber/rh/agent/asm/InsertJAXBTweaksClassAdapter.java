@@ -20,10 +20,7 @@ package com.quartercode.jtimber.rh.agent.asm;
 
 import static org.objectweb.asm.Opcodes.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Triple;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
@@ -33,6 +30,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 import com.quartercode.jtimber.rh.agent.util.ASMUtils;
+import com.quartercode.jtimber.rh.agent.util.Field;
 
 /**
  * The {@link ClassVisitor} which tweaks all node classes in order to properly support JAXB persistence.
@@ -48,17 +46,16 @@ import com.quartercode.jtimber.rh.agent.util.ASMUtils;
  */
 public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
-    private static final Type                      SWW_CLASS                    = Type.getObjectType("com/quartercode/jtimber/api/node/wrapper/SubstituteWithWrapper");
-    private static final Type                      SWW_DEFAULT_CLASS            = Type.getObjectType(SWW_CLASS.getInternalName() + "$Default");
+    private static final Type                     SWW_CLASS                    = Type.getObjectType("com/quartercode/jtimber/api/node/wrapper/SubstituteWithWrapper");
+    private static final Type                     SWW_DEFAULT_CLASS            = Type.getObjectType(SWW_CLASS.getInternalName() + "$Default");
 
-    private static final Method                    AFTER_UNMARSHAL_METHOD       = Method.getMethod("void afterUnmarshal (javax.xml.bind.Unmarshaller, java.lang.Object)");
-    private static final Method                    ADDED_AFTER_UNMARSHAL_METHOD = Method.getMethod("void afterUnmarshal_jtimber (javax.xml.bind.Unmarshaller, java.lang.Object)");
+    private static final Method                   AFTER_UNMARSHAL_METHOD       = Method.getMethod("void afterUnmarshal (javax.xml.bind.Unmarshaller, java.lang.Object)");
+    private static final Method                   ADDED_AFTER_UNMARSHAL_METHOD = Method.getMethod("void afterUnmarshal_jtimber (javax.xml.bind.Unmarshaller, java.lang.Object)");
 
-    private Type                                   classType;
-    private boolean                                containsCustomAfterUnmarshalMethod;
+    private boolean                               containsCustomAfterUnmarshalMethod;
 
-    private final Map<String, Type>                fields                       = new HashMap<>();
-    private final List<Triple<String, Type, Type>> fieldsForWrapperSubstitution = new ArrayList<>();
+    private final List<Field>                     fields                       = new ArrayList<>();
+    private final List<Triple<Field, Type, Type>> fieldsForWrapperSubstitution = new ArrayList<>();
 
     /**
      * Creates a new insert JAXB tweaks class adapter.
@@ -73,7 +70,11 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
     @Override
     public FieldVisitor visitField(int access, final String name, String desc, String signature, Object value) {
 
-        fields.put(name, Type.getType(desc));
+        // Create a representation of the field
+        final Field field = new Field(name, Type.getType(desc));
+
+        // Add the field to the "fields" list
+        fields.add(field);
 
         // This annotation visitor expects "SubstituteWithWrapper" annotations, parses them and adds their data to the list "fieldsForWrapperSubstitution"
         final class AnnotationVisitorImpl extends AnnotationVisitor {
@@ -104,8 +105,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
             @Override
             public void visitEnd() {
 
-                fieldsForWrapperSubstitution.add(Triple.of(name, wrapperType, wrapperConstructorArgType));
-
+                fieldsForWrapperSubstitution.add(Triple.of(field, wrapperType, wrapperConstructorArgType));
             }
 
         }
@@ -205,9 +205,9 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
          * Iterate through all fields annotated with "SubstituteWithWrapper" and replace their current value with their current value wrapped inside a wrapper.
          * This section first reads the current field value, then creates a new wrapper which wraps around that field value, and finally sets the field to the wrapper.
          */
-        for (Triple<String, Type, Type> field : fieldsForWrapperSubstitution) {
-            String fieldName = field.getLeft();
-            Type fieldType = fields.get(fieldName);
+        for (Triple<Field, Type, Type> field : fieldsForWrapperSubstitution) {
+            String fieldName = field.getLeft().getName();
+            Type fieldType = field.getLeft().getType();
             Type wrapperType = field.getMiddle();
             // Null means "default"; in that case, the field type is used as the type of the first argument of the wrapper constructor
             Type wrapperConstructorArgType = field.getRight() == null ? fieldType : field.getRight();
@@ -247,11 +247,8 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
          * Iterate through all fields.
          * For each field, call the addParent() method with "this" as parent if the current field value is parent-aware
          */
-        for (Entry<String, Type> field : fields.entrySet()) {
-            String fieldName = field.getKey();
-            Type fieldType = field.getValue();
-
-            ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
+        for (Field field : fields) {
+            ASMUtils.generateGetField(mg, classType, field.getName(), field.getType());
 
             // ----- Stack: [fieldValue]
 
