@@ -66,9 +66,14 @@ public interface Wrapper extends ParentAware<Node<?>> {
      * Note that this method should not further resolve the actual children.
      * To continue the example, this method should not check whether any of the elements is another wrapper and add the children of that wrapper.
      * Instead, it should just add the wrapper element itself.
-     * This behavior has been chosen for efficiency reasons.
+     * This behavior has been chosen for efficiency reasons.<br>
+     * <br>
+     * Additionally, the returned list may contain {@code null} values.
+     * In fact, it is recommended that {@code null} values are not filtered out by this method.
+     * This behavior has also been chosen for efficiency reasons.
      * 
      * @return The objects represented by the wrapper.
+     *         The returned list may contain other wrappers and {@code null} values.
      */
     public List<Object> getActualChildren();
 
