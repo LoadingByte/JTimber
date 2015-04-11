@@ -45,6 +45,7 @@ public interface Node<P extends Node<?>> extends ParentAware<P> {
     /**
      * Returns the values of all non-null attributes this class and all superclasses have.
      * Note that all objects and primitives are included in the returned list.
+     * Moreover, if this node references an object multiple times, the returned list contains that child object multiple times as well.
      * 
      * @return All non-null attributes of this class and all superclasses.
      */

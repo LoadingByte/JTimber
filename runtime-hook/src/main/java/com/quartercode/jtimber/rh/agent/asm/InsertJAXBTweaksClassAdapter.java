@@ -77,7 +77,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
         // Add the field to the "fields" list
         fields.add(field);
 
-        // This annotation visitor expects "SubstituteWithWrapper" annotations, parses them and adds their data to the list "fieldsForWrapperSubstitution"
+        // This annotation visitor expects "@SubstituteWithWrapper" annotations, parses them and adds their data to the list "fieldsForWrapperSubstitution"
         final class AnnotationVisitorImpl extends AnnotationVisitor {
 
             private Type wrapperType;

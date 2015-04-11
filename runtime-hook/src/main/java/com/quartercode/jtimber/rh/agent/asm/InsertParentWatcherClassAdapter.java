@@ -93,6 +93,7 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
 
     /*
      * The method adapter internally used by the InsertParentWatcherClassAdapter.
+     * It adds parent watcher instructions around each PUTFIELD instruction (for allowed fields).
      */
     private final class InsertParentWatcherMethodAdapter extends MethodVisitor {
 
