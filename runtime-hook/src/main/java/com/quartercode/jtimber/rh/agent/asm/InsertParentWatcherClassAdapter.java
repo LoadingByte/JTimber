@@ -29,7 +29,7 @@ import com.quartercode.jtimber.rh.agent.util.ASMUtils;
  * Note that it transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
-public final class InsertParentWatcherClassAdapter extends ClassVisitor {
+public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapter {
 
     /**
      * Creates a new insert parent watcher class adapter.
@@ -38,7 +38,7 @@ public final class InsertParentWatcherClassAdapter extends ClassVisitor {
      */
     public InsertParentWatcherClassAdapter(ClassVisitor cv) {
 
-        super(ASM5, cv);
+        super(cv);
     }
 
     @Override

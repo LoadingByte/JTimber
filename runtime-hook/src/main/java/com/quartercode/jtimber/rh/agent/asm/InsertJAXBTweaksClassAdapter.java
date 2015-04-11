@@ -46,7 +46,7 @@ import com.quartercode.jtimber.rh.agent.util.ASMUtils;
  * Note that the class visitor transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
-public final class InsertJAXBTweaksClassAdapter extends ClassVisitor {
+public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
     private static final Type                      SWW_CLASS                    = Type.getObjectType("com/quartercode/jtimber/api/node/wrapper/SubstituteWithWrapper");
     private static final Type                      SWW_DEFAULT_CLASS            = Type.getObjectType(SWW_CLASS.getInternalName() + "$Default");
@@ -67,15 +67,7 @@ public final class InsertJAXBTweaksClassAdapter extends ClassVisitor {
      */
     public InsertJAXBTweaksClassAdapter(ClassVisitor cv) {
 
-        super(ASM5, cv);
-    }
-
-    @Override
-    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-
-        classType = Type.getObjectType(name);
-
-        super.visit(version, access, name, signature, superName, interfaces);
+        super(cv);
     }
 
     @Override

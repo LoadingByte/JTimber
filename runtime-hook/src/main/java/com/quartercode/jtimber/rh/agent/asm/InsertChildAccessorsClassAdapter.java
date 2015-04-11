@@ -18,7 +18,8 @@
 
 package com.quartercode.jtimber.rh.agent.asm;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.IADD;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,7 @@ import com.quartercode.jtimber.rh.agent.util.ASMUtils;
  * Note that it transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
-public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
+public final class InsertChildAccessorsClassAdapter extends CommonBaseClassAdapter {
 
     private static final Method            DEFAULT_CONSTRUCTOR              = Method.getMethod("void <init> ()");
     private static final Type              ARRAY_LIST_CLASS                 = Type.getObjectType("java/util/ArrayList");
@@ -50,7 +51,6 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
 
     private final Set<String>              nodeIndex;
 
-    private Type                           classType;
     private Type                           superclassType;
     private boolean                        hasNodeAsSuperclass;
     private final List<Pair<String, Type>> fields                           = new ArrayList<>();
@@ -63,7 +63,7 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
      */
     public InsertChildAccessorsClassAdapter(ClassVisitor cv, Set<String> nodeIndex) {
 
-        super(ASM5, cv);
+        super(cv);
 
         this.nodeIndex = nodeIndex;
     }
@@ -71,7 +71,6 @@ public final class InsertChildAccessorsClassAdapter extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 
-        classType = Type.getObjectType(name);
         superclassType = Type.getObjectType(superName);
         hasNodeAsSuperclass = nodeIndex.contains(superName);
 
