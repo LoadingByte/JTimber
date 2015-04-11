@@ -46,6 +46,7 @@ import com.quartercode.jtimber.rh.agent.util.Field;
  */
 public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
+    private static final Type                     WEAK_CLASS                   = Type.getObjectType("com/quartercode/jtimber/api/node/Weak");
     private static final Type                     SWW_CLASS                    = Type.getObjectType("com/quartercode/jtimber/api/node/wrapper/SubstituteWithWrapper");
     private static final Type                     SWW_DEFAULT_CLASS            = Type.getObjectType(SWW_CLASS.getInternalName() + "$Default");
 
@@ -110,7 +111,9 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
         }
 
-        // This field visitor just "invokes" the AnnotationVisitorImpl with each found "SubstituteWithWrapper" annotation
+        // This field visitor does two things:
+        // - It removes the field from the "fields" list if the "@Weak" annotation is present
+        // - It "invokes" the AnnotationVisitorImpl with a possibly found "@SubstituteWithWrapper" annotation
         final class FieldVisitorImpl extends FieldVisitor {
 
             private FieldVisitorImpl(FieldVisitor fv) {
@@ -120,6 +123,10 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
             @Override
             public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+
+                if (desc.equals(WEAK_CLASS.getDescriptor())) {
+                    fields.remove(field);
+                }
 
                 AnnotationVisitor av = super.visitAnnotation(desc, visible);
                 if (desc.equals(SWW_CLASS.getDescriptor()) && av != null) {

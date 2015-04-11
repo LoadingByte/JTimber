@@ -19,7 +19,11 @@
 package com.quartercode.jtimber.rh.agent.asm;
 
 import static org.objectweb.asm.Opcodes.*;
+import java.util.HashSet;
+import java.util.Set;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import com.quartercode.jtimber.rh.agent.util.ASMUtils;
@@ -31,6 +35,10 @@ import com.quartercode.jtimber.rh.agent.util.ASMUtils;
  */
 public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapter {
 
+    private static final Type WEAK_CLASS = Type.getObjectType("com/quartercode/jtimber/api/node/Weak");
+
+    private final Set<String> weakFields = new HashSet<>();
+
     /**
      * Creates a new insert parent watcher class adapter.
      * 
@@ -39,6 +47,37 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
     public InsertParentWatcherClassAdapter(ClassVisitor cv) {
 
         super(cv);
+    }
+
+    @Override
+    public FieldVisitor visitField(int access, final String name, String desc, String signature, Object value) {
+
+        // This field visitor adds its processed field to the "weakFields" set if the field has the "@Weak" annotation
+        final class FieldVisitorImpl extends FieldVisitor {
+
+            private FieldVisitorImpl(FieldVisitor fv) {
+
+                super(ASM5, fv);
+            }
+
+            @Override
+            public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+
+                if (desc.equals(WEAK_CLASS.getDescriptor())) {
+                    weakFields.add(name);
+                }
+
+                return super.visitAnnotation(desc, visible);
+            }
+
+        }
+
+        // Return a FieldVisitorImpl
+        FieldVisitor fv = super.visitField(access, name, desc, signature, value);
+        if (fv != null) {
+            fv = new FieldVisitorImpl(fv);
+        }
+        return fv;
     }
 
     @Override
@@ -55,7 +94,7 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
     /*
      * The method adapter internally used by the InsertParentWatcherClassAdapter.
      */
-    private static final class InsertParentWatcherMethodAdapter extends MethodVisitor {
+    private final class InsertParentWatcherMethodAdapter extends MethodVisitor {
 
         private InsertParentWatcherMethodAdapter(MethodVisitor mv) {
 
@@ -66,11 +105,11 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 
             /*
-             * If this is a PUTFIELD instruction, the field references an object and the field is located in this class,
+             * If this is a PUTFIELD instruction, the field isn't weak (no @Weak annotation), the field references an object and the field is located in this class,
              * add the parent watcher code around the instruction.
              * Note that the instructions inside this block make sure to reconstruct the original stack.
              */
-            if (opcode == PUTFIELD && Type.getType(desc).getSort() == Type.OBJECT && owner.equals(classType.getInternalName())) {
+            if (opcode == PUTFIELD && !weakFields.contains(name) && Type.getType(desc).getSort() == Type.OBJECT && owner.equals(classType.getInternalName())) {
                 /*
                  * If a parent-aware object is already present in the field, remove "this" from its parents.
                  */
