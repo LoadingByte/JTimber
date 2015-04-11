@@ -65,8 +65,12 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 
-            // Note that the instructions inside this block make sure to reconstruct the "input" stack
-            if (opcode == PUTFIELD && Type.getType(desc).getSort() == Type.OBJECT) {
+            /*
+             * If this is a PUTFIELD instruction, the field references an object and the field is located in this class,
+             * add the parent watcher code around the instruction.
+             * Note that the instructions inside this block make sure to reconstruct the original stack.
+             */
+            if (opcode == PUTFIELD && Type.getType(desc).getSort() == Type.OBJECT && owner.equals(classType.getInternalName())) {
                 /*
                  * If a parent-aware object is already present in the field, remove "this" from its parents.
                  */
