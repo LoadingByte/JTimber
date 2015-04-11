@@ -83,6 +83,7 @@ public class CollectionWrapperTest {
         assertFalse(it1.hasNext());
 
         assertArrayEquals("Collection elements after first iteration", new Node[] { elem1, elem2 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after first iteration", new Object[] { elem1, elem2 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after first iteration", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after first iteration", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -92,6 +93,7 @@ public class CollectionWrapperTest {
         it2.remove();
 
         assertArrayEquals("Collection elements after second iteration", new Node[] { elem2 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after second iteration", new Object[] { elem2 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after second iteration", new Node[0], elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after second iteration", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -104,6 +106,7 @@ public class CollectionWrapperTest {
         wrapper.add(elem2);
 
         assertArrayEquals("Collection elements after modifications", new Node[] { elem1, elem2 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1, elem2 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -117,6 +120,7 @@ public class CollectionWrapperTest {
         wrapper.remove(elem2);
 
         assertArrayEquals("Collection elements after modifications", new Node[] { elem1 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[0], elem2.getParents().toArray());
@@ -128,6 +132,7 @@ public class CollectionWrapperTest {
         wrapper.addAll(Arrays.asList(elem1, elem2));
 
         assertArrayEquals("Collection elements after modifications", new Node[] { elem1, elem2 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1, elem2 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -142,6 +147,7 @@ public class CollectionWrapperTest {
         wrapper.removeAll(Arrays.asList(elem2, elem3));
 
         assertArrayEquals("Collection elements after modifications", new Node[] { elem1 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2 }, elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[0], elem2.getParents().toArray());
@@ -157,6 +163,7 @@ public class CollectionWrapperTest {
         wrapper.retainAll(Arrays.asList(elem2, elem3));
 
         assertArrayEquals("Collection elements after modifications", new Node[] { elem2, elem3 }, collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem2, elem3 }, wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[0], elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[] { parent1, parent2 }, elem2.getParents().toArray());
@@ -171,6 +178,7 @@ public class CollectionWrapperTest {
         wrapper.clear();
 
         assertArrayEquals("Collection elements after modifications", new Node[0], collection.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[0], wrapper.getActualChildren().toArray());
 
         assertArrayEquals("Parents of element 1 after modifications", new Node[0], elem1.getParents().toArray());
         assertArrayEquals("Parents of element 2 after modifications", new Node[0], elem2.getParents().toArray());
