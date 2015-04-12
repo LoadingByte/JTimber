@@ -65,9 +65,10 @@ public class ListWrapper<E extends ParentAware<?>> extends CollectionWrapper<E> 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
 
+        int indexCounter = index;
         for (E element : c) {
-            add(index, element);
-            index++;
+            add(indexCounter, element);
+            indexCounter++;
         }
 
         return !c.isEmpty();

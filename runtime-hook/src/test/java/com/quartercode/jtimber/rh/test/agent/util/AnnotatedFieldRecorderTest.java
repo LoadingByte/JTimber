@@ -27,7 +27,9 @@ import com.quartercode.jtimber.rh.agent.util.AnnotatedFieldRecorder;
 
 public class AnnotatedFieldRecorderTest {
 
-    private static final Type ANNOTATION_TYPE = Type.getObjectType("test/TestAnnotation");
+    private static final Type ANNOTATION_1_TYPE = Type.getObjectType("test/TestAnnotation1");
+    private static final Type ANNOTATION_2_TYPE = Type.getObjectType("test/TestAnnotation2");
+    private static final Type ANNOTATION_3_TYPE = Type.getObjectType("test/TestAnnotation3");
 
     @Test
     public void test() {
@@ -36,11 +38,13 @@ public class AnnotatedFieldRecorderTest {
         list.add("field1");
         list.add("field3");
 
-        AnnotatedFieldRecorder fv = new AnnotatedFieldRecorder(null, "field2", ANNOTATION_TYPE, list);
+        AnnotatedFieldRecorder fv = new AnnotatedFieldRecorder(null, "field2", ANNOTATION_2_TYPE, list);
 
         assertArrayEquals("Field list before recorder visit", new String[] { "field1", "field3" }, list.toArray());
 
-        fv.visitAnnotation(ANNOTATION_TYPE.getDescriptor(), true);
+        fv.visitAnnotation(ANNOTATION_1_TYPE.getDescriptor(), true);
+        fv.visitAnnotation(ANNOTATION_2_TYPE.getDescriptor(), true);
+        fv.visitAnnotation(ANNOTATION_3_TYPE.getDescriptor(), true);
 
         assertArrayEquals("Field list after recorder visit", new String[] { "field1", "field3", "field2" }, list.toArray());
     }

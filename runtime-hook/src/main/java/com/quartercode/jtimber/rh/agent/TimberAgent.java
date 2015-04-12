@@ -63,17 +63,25 @@ public class TimberAgent {
 
         try (ResourceLister resourceLister = new ResourceLister(resourcePath, false)) {
             for (Path resource : resourceLister.getResourcePaths()) {
-                try {
-                    index.addAll(readLines(resource));
-                } catch (IOException e) {
-                    LOGGER.error("Cannot read lines from specific index file ('{}')", resource, e);
-                }
+                readIndex(resource, index);
             }
         } catch (IOException e) {
             LOGGER.error("Cannot read index files from '{}'", resourcePath, e);
         }
 
         return index;
+    }
+
+    /*
+     * Reads the given index files and puts the resulting entries into the given set.
+     */
+    private static void readIndex(Path specificResource, Set<String> output) {
+
+        try {
+            output.addAll(readLines(specificResource));
+        } catch (IOException e) {
+            LOGGER.error("Cannot read lines from specific index file ('{}')", specificResource, e);
+        }
     }
 
     /*
