@@ -22,12 +22,18 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.ref.WeakReference;
 
 /**
- * Any {@link ParentAware} objects stored in {@link Node} fields annotated with this annotation don't know they are referenced by the annotated field.
+ * {@link Node} fields, which are annotated with this annotation and contain a {@link ParentAware} object, null themselves as soon as a referenced
+ * object has no more {@link ParentAware#getParents() parents}.
+ * In order to avoid inconsistencies, the referenced object should not be revived (by adding new parents to it) after it has been dereferenced.
+ * That should not be done because the object disposal is lazy and can only happen when the field is <i>accessed</i> (from within the node class).
+ * Therefore, you should also watch out for possible memory leaks! Weak references are not {@link WeakReference weak for the garbage collector}.<br>
+ * <br>
+ * Moreover, any {@link ParentAware} objects stored in annotated node fields don't know they are referenced by the annotated field.
  * For example, if a node object N holds a reference to a parent-aware object PA in an annotated field, PA doesn't have N in its parent list.
  * However, N has PA in its child list.
- * Note that the annotation doesn't change anything else.
  */
 @Target ({ ElementType.FIELD })
 @Retention (RetentionPolicy.CLASS)
