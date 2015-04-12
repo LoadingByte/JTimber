@@ -116,7 +116,6 @@ public final class InsertWeakRefWatcherClassAdapter extends CommonBaseClassAdapt
                 // ----- Stack: [field]
 
                 // Skip to the end if the object's parent count isn't 0
-                // super.visitTypeInsn(CHECKCAST, "com/quartercode/jtimber/api/node/ParentAware");
                 super.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, "getParentCount", "()I", true);
                 super.visitJumpInsn(IFNE, endIf);
 
