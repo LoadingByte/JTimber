@@ -21,12 +21,12 @@ package com.quartercode.jtimber.rh.agent.asm;
 import static org.objectweb.asm.Opcodes.*;
 import java.util.HashSet;
 import java.util.Set;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import com.quartercode.jtimber.rh.agent.util.ASMUtils;
+import com.quartercode.jtimber.rh.agent.util.AnnotatedFieldRecorder;
 
 /**
  * The {@link ClassVisitor} which adds so called "parent watchers" to nodes in order to track the parents of parent-aware objects.
@@ -52,30 +52,10 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
     @Override
     public FieldVisitor visitField(int access, final String name, String desc, String signature, Object value) {
 
-        // This field visitor adds its processed field to the "weakFields" set if the field has the "@Weak" annotation
-        final class FieldVisitorImpl extends FieldVisitor {
-
-            private FieldVisitorImpl(FieldVisitor fv) {
-
-                super(ASM5, fv);
-            }
-
-            @Override
-            public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-
-                if (desc.equals(WEAK_CLASS.getDescriptor())) {
-                    weakFields.add(name);
-                }
-
-                return super.visitAnnotation(desc, visible);
-            }
-
-        }
-
-        // Return a FieldVisitorImpl
+        // Return an AnnotatedFieldRecorder which adds all fields annotated with "@Weak" to the "weakFields" set
         FieldVisitor fv = super.visitField(access, name, desc, signature, value);
         if (fv != null) {
-            fv = new FieldVisitorImpl(fv);
+            fv = new AnnotatedFieldRecorder(fv, name, WEAK_CLASS, weakFields);
         }
         return fv;
     }
