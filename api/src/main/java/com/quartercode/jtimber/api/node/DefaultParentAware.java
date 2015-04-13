@@ -86,7 +86,7 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
             Class<?> allowedParentClass = TypeResolver.resolveRawArgument(ParentAware.class, getClass());
             boolean allowedParent = allowedParentClass.isAssignableFrom(parent.getClass());
 
-            if (allowedParent) {
+            if (allowedParent || allowedParentClass == TypeResolver.Unknown.class) {
                 // This unchecked cast cannot be avoided; however, the check above should have filtered out any disallowed parent
                 parents.add((P) parent);
             } else {
