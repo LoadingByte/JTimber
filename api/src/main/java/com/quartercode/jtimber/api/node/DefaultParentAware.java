@@ -90,7 +90,8 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
                 // This unchecked cast cannot be avoided; however, the check above should have filtered out any disallowed parent
                 parents.add((P) parent);
             } else {
-                throw new IllegalParentTypeException(this, parent, "Nodes of type '" + parent.getClass().getName() + "' are not allowed to reference parent-aware objects of type '" + getClass().getName() + "'");
+                throw new IllegalParentTypeException(this, parent, "Nodes of type '" + parent.getClass().getName() + "' are not allowed to reference parent-aware objects of type '" + getClass().getName() + "',"
+                        + "with latter only accepting '" + allowedParentClass.getName() + "' parents");
             }
         }
     }

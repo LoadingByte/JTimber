@@ -63,7 +63,7 @@ public class DefaultParentAwareTest {
         PA1 pa = new PA1();
         pa.addParent(null); // Expect no exception
 
-        assertEquals("A null parent has been added", pa.getParentCount(), 0);
+        assertEquals("Parent count after a null parent has been added", pa.getParentCount(), 0);
     }
 
     @Test (expected = IllegalParentTypeException.class)

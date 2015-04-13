@@ -75,11 +75,12 @@ public interface ParentAware<P extends Node<?>> {
      * <b>Don't call this method if you don't have a reason to do it!</b><br>
      * <br>
      * Note that this method enforces the type limit imposed by the generic type parameter {@code <P>}.
-     * All nodes which are not compatible (same type or subtype) with that generic type parameter cause an exception to be thrown.
+     * All nodes which are not compatible (same type or subtype) with that generic type parameter cause an {@link IllegalParentTypeException} to be thrown.
      * However, this method still accepts all nodes in order to make the implementation of wrappers easier.
      * 
      * @param parent The parent node to add to the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
+     * @throws IllegalParentTypeException
      */
     public void addParent(Node<?> parent);
 
