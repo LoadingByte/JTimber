@@ -47,6 +47,17 @@ public interface ParentAware<P extends Node<?>> {
     public List<P> getParents();
 
     /**
+     * Returns the one and only {@link Node} that holds a reference to this parent-aware object in some way.
+     * That single node is also called the "parent" of this object.
+     * However, this method throws a {@link MultipleParentsException} if this object is referenced by multiple nodes.
+     * Note that the exception is not thrown if the same object references this object multiple times (e.g. through multiple fields).
+     * 
+     * @return The one and only node that references this object.
+     * @throws MultipleParentsException
+     */
+    public P getSingleParent();
+
+    /**
      * Returns the amount of {@link Node}s that hold a reference to this parent-aware object in some way.
      * Those nodes are also called "parents" of this object.<br>
      * <br>

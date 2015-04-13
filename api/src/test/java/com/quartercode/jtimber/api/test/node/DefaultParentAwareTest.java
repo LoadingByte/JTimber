@@ -24,9 +24,38 @@ import org.junit.Test;
 import com.quartercode.jtimber.api.node.DefaultNode;
 import com.quartercode.jtimber.api.node.DefaultParentAware;
 import com.quartercode.jtimber.api.node.IllegalParentTypeException;
+import com.quartercode.jtimber.api.node.MultipleParentsException;
 import com.quartercode.jtimber.api.node.Node;
 
 public class DefaultParentAwareTest {
+
+    @Test
+    public void testGetSingleParent() {
+
+        PA1 pa = new PA1();
+        Node1 node = new Node1();
+
+        assertEquals("Single parent when PA has no parents", null, pa.getSingleParent());
+
+        pa.addParent(node);
+        assertEquals("Single parent when PA has one parent", node, pa.getSingleParent());
+
+        pa.addParent(node);
+        pa.addParent(node);
+        pa.addParent(node);
+        assertEquals("Single parent when PA has four identical parents", node, pa.getSingleParent());
+    }
+
+    @Test (expected = MultipleParentsException.class)
+    public void testGetSingleParentException() {
+
+        PA1 pa = new PA1();
+        pa.addParent(new Node1());
+        pa.addParent(new Node2());
+
+        // Expect exception
+        pa.getSingleParent();
+    }
 
     @Test
     public void testAddNullParent() {

@@ -45,6 +45,34 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
     }
 
     @Override
+    public P getSingleParent() {
+
+        if (parents.isEmpty()) {
+            // If there are no parents, return null
+            return null;
+        } else {
+            P firstParent = parents.get(0);
+
+            if (parents.size() == 1) {
+                // If there is only one parent, return that parent
+                return firstParent;
+            } else {
+                // If there are multiple parents, check whether all parents are identical to the first parent in the list
+                // In other words: Check whether one single node references this object multiple times
+                for (int index = 1; index < parents.size(); index++) {
+                    if (parents.get(index) != firstParent) {
+                        // If that isn't the case, throw an exception
+                        throw new MultipleParentsException(this, "Cannot use getSingleParent() on instance of '" + getClass().getName() + "' with " + parents.size() + " parents");
+                    }
+                }
+
+                // If that is the case, return the first parent (all parents are identical)
+                return firstParent;
+            }
+        }
+    }
+
+    @Override
     public int getParentCount() {
 
         return parents.size();
