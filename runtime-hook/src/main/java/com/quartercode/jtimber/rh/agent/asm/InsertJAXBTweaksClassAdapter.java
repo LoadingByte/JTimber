@@ -25,6 +25,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -219,35 +220,45 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
             // Null means "default"; in that case, the field type is used as the type of the first argument of the wrapper constructor
             Type wrapperConstructorArgType = field.getRight() == null ? fieldType : field.getRight();
 
-            // Note that this reference will be used for the PUTFIELD instruction later on
-            mg.loadThis();
+            // Retrieve the current field value and jump over the wrapping code if the field value is null
+            ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
+            Label endIf = new Label();
+            mg.ifNull(endIf);
 
-            // ----- Stack: [this]
-
-            // Creates the wrapper using the current field value
+            // The wrapping code which wraps the current field value in a wrapper
             {
-                // Create a new instance of the wrapper type and duplicate it for the constructor call later on
-                mg.newInstance(wrapperType);
-                mg.dup();
+                // Note that this reference will be used for the PUTFIELD instruction later on
+                mg.loadThis();
 
-                // ----- Stack: [this, wrapper, wrapper]
+                // ----- Stack: [this]
 
-                // Retrieve the current field value
-                ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
+                // Creates the wrapper using the current field value
+                {
+                    // Create a new instance of the wrapper type and duplicate it for the constructor call later on
+                    mg.newInstance(wrapperType);
+                    mg.dup();
 
-                // ----- Stack: [this, wrapper, wrapper, fieldValue]
+                    // ----- Stack: [this, wrapper, wrapper]
 
-                // Call the constructor of the new wrapper using the current field value as the first argument
-                mg.invokeConstructor(wrapperType, Method.getMethod("void <init> (" + wrapperConstructorArgType.getClassName() + ")"));
+                    // Retrieve the current field value
+                    ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
 
-                // ----- Stack: [this, wrapper]
+                    // ----- Stack: [this, wrapper, wrapper, fieldValue]
+
+                    // Call the constructor of the new wrapper using the current field value as the first argument
+                    mg.invokeConstructor(wrapperType, Method.getMethod("void <init> (" + wrapperConstructorArgType.getClassName() + ")"));
+
+                    // ----- Stack: [this, wrapper]
+                }
+
+                // Store the new wrapper in the field the value has been retrieved from before
+                // The substitution is complete
+                mg.putField(classType, fieldName, fieldType);
+
+                // ----- Stack: []
             }
 
-            // Store the new wrapper in the field the value has been retrieved from before
-            // The substitution is complete
-            mg.putField(classType, fieldName, fieldType);
-
-            // ----- Stack: []
+            mg.visitLabel(endIf);
         }
 
         /*
