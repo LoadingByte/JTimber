@@ -64,6 +64,7 @@ public class ClassMetadata {
     /**
      * The names of all {@link #fields} of the represented class that are annotated with the {@code @SubstituteWithWrapper} annotation.
      * Note that the two parameters of the annotation ({@code value} and {@code wrapperConstructorArg}) are stored in {@link Pair}s mapped to the field names.
+     * Note that the {@code wrapperConstructorArg} parameter might be {@code null} if no one is set explicitly.
      */
     public final Map<String, Pair<Type, Type>> wrapperSubstitutedFields = new HashMap<>();
 

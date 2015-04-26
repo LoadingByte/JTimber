@@ -16,7 +16,7 @@
  * along with JTimber. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.quartercode.jtimber.rh.test.agent.util;
+package com.quartercode.jtimber.rh.test.agent.asm.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import java.util.ArrayList;

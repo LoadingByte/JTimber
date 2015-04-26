@@ -58,7 +58,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
 
     /*
      * The method adapter internally used by the InsertParentWatcherClassAdapter.
-     * It adds parent watcher instructions around each PUTFIELD instruction (for allowed fields).
+     * It adds parent watcher instructions around each PUTFIELD instruction (for non-weak fields).
      */
     private final class InsertParentWatcherMethodAdapter extends GeneratorAdapter {
 

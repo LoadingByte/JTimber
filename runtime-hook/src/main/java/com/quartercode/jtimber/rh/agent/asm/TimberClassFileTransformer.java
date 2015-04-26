@@ -92,8 +92,8 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         ClassVisitor next = target;
 
         // Order requirements:
-        // - InsertWeakRefWatcherClassTransformer after all transformers that add/remove/manipulate GETFIELD instructions
-        // - InsertJAXBTweaksClassTransformer after InsertParentWatcherClassTransformer because there shouldn't be any parent watchers in the afterUnmarshal() method
+        // - InsertWeakRefWatcherCT after all transformers that add/remove/manipulate GETFIELD instructions
+        // - InsertJAXBTweaksCT after InsertParentWatcherCT because there shouldn't be any parent watchers in the afterUnmarshal() method
         // - InsertJAXBTweaksCT after InsertWrapperSubstitutionCT because there shouldn't be any wrapper substitutions in the afterUnmarshal() method
         // - InsertParentWatcherCT after InsertWrapperSubstitutionCT because the parent watcher should handle new wrappers instead of the original (now wrapped) objects
         next = new InsertWeakRefWatcherClassTransformer(next, metadata);
