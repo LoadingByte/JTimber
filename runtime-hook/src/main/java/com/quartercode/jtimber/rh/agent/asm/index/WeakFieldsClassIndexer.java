@@ -23,7 +23,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Type;
 import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
 import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
-import com.quartercode.jtimber.rh.agent.util.AnnotatedFieldRecorder;
+import com.quartercode.jtimber.rh.agent.asm.util.AnnotatedFieldRecorder;
 
 /**
  * The class indexer which indexes the {@link ClassMetadata#weakFields fields annotated with @Weak} of the processed class.

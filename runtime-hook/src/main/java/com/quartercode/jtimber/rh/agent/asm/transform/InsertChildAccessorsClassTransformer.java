@@ -28,7 +28,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
 import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
-import com.quartercode.jtimber.rh.agent.util.ASMUtils;
+import com.quartercode.jtimber.rh.agent.asm.util.ASMUtils;
 
 /**
  * The {@link ClassVisitor} which adds so called "child accessors" to nodes in order to make the children of such nodes (their attributes) available through a convenient method.

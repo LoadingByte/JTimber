@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.objectweb.asm.Type;
-import com.quartercode.jtimber.rh.agent.util.AnnotatedFieldRecorder;
+import com.quartercode.jtimber.rh.agent.asm.util.AnnotatedFieldRecorder;
 
 public class AnnotatedFieldRecorderTest {
 

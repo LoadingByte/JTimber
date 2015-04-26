@@ -24,7 +24,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
 import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
-import com.quartercode.jtimber.rh.agent.util.ASMUtils;
+import com.quartercode.jtimber.rh.agent.asm.util.ASMUtils;
 
 /**
  * The {@link ClassVisitor} which adds so called "parent watchers" to nodes in order to track the parents of parent-aware objects.

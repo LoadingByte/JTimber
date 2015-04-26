@@ -29,7 +29,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
 import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
-import com.quartercode.jtimber.rh.agent.util.ASMUtils;
+import com.quartercode.jtimber.rh.agent.asm.util.ASMUtils;
 
 /**
  * The {@link ClassVisitor} which tweaks all node classes in order to properly support JAXB persistence.

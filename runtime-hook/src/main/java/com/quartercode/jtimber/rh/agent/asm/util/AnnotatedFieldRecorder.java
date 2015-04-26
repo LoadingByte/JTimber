@@ -16,7 +16,7 @@
  * along with JTimber. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.quartercode.jtimber.rh.agent.util;
+package com.quartercode.jtimber.rh.agent.asm.util;
 
 import static org.objectweb.asm.Opcodes.ASM5;
 import java.util.Collection;
