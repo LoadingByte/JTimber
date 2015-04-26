@@ -84,6 +84,52 @@ public class ASMUtils {
         mg.visitLabel(endIf);
     }
 
+    /**
+     * Generates the instructions to wrap the top stack value in a wrapper of the given type and then put that wrapper on the top of the stack instead of the original object.
+     * That is done by constructing a new wrapper using the original object as first and only constructor argument.
+     * If the top stack value is {@code null}, nothing happens.
+     * 
+     * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
+     * @param wrapperType The {@link Type} of the wrapper that should be constructed.
+     * @param wrapperConstructorArgType The type of the single argument of the wrapper constructor that should be called.
+     *        Note that the top stack value must be an instance of this type.
+     */
+    public static void generateWrapperSubstitution(GeneratorAdapter mg, Type wrapperType, Type wrapperConstructorArgType) {
+
+        // ----- Stack: [forWrapping]
+
+        // Skip the if-block with the wrapping code if the top stack value ("forWrapping") is null
+        mg.dup();
+        Label endIf = new Label();
+        mg.ifNull(endIf);
+
+        // The wrapping code which wraps the "forWrapping" object in a wrapper
+        {
+            // ----- Stack: [forWrapping]
+
+            // Create a new instance of the wrapper type and duplicate it for the constructor call later on
+            mg.newInstance(wrapperType);
+
+            // ----- Stack: [forWrapping, wrapper]
+
+            // Rearrange the stack in order to prepare for the wrapper constructor call
+            mg.dupX1();
+            mg.dupX1();
+            mg.pop();
+
+            // ----- Stack: [wrapper, wrapper, forWrapping]
+
+            // Call the constructor of the new wrapper using the "forWrapping" object as first and only argument
+            mg.invokeConstructor(wrapperType, Method.getMethod("void <init> (" + wrapperConstructorArgType.getClassName() + ")"));
+
+            // ----- Stack: [wrapper]
+        }
+
+        mg.visitLabel(endIf);
+
+        // ----- Stack: [forWrapping OR wrapper]
+    }
+
     private ASMUtils() {
 
     }
