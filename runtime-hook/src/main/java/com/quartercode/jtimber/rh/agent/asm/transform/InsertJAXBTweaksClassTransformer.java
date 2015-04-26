@@ -16,22 +16,20 @@
  * along with JTimber. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.quartercode.jtimber.rh.agent.asm;
+package com.quartercode.jtimber.rh.agent.asm.transform;
 
 import static org.objectweb.asm.Opcodes.*;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang3.tuple.Triple;
-import org.objectweb.asm.AnnotationVisitor;
+import java.util.Map.Entry;
+import org.apache.commons.lang3.tuple.Pair;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
+import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
+import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
 import com.quartercode.jtimber.rh.agent.util.ASMUtils;
-import com.quartercode.jtimber.rh.agent.util.Field;
 
 /**
  * The {@link ClassVisitor} which tweaks all node classes in order to properly support JAXB persistence.
@@ -45,105 +43,22 @@ import com.quartercode.jtimber.rh.agent.util.Field;
  * Note that the class visitor transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
-public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
+public final class InsertJAXBTweaksClassTransformer extends MetadataAwareClassVisitor {
 
-    private static final Type                     WEAK_CLASS                   = Type.getObjectType("com/quartercode/jtimber/api/node/Weak");
-    private static final Type                     SWW_CLASS                    = Type.getObjectType("com/quartercode/jtimber/api/node/wrapper/SubstituteWithWrapper");
-    private static final Type                     SWW_DEFAULT_CLASS            = Type.getObjectType(SWW_CLASS.getInternalName() + "$Default");
+    private static final Method AFTER_UNMARSHAL_METHOD       = Method.getMethod("void afterUnmarshal (javax.xml.bind.Unmarshaller, java.lang.Object)");
+    private static final Method ADDED_AFTER_UNMARSHAL_METHOD = Method.getMethod("void afterUnmarshal_jtimber (javax.xml.bind.Unmarshaller, java.lang.Object)");
 
-    private static final Method                   AFTER_UNMARSHAL_METHOD       = Method.getMethod("void afterUnmarshal (javax.xml.bind.Unmarshaller, java.lang.Object)");
-    private static final Method                   ADDED_AFTER_UNMARSHAL_METHOD = Method.getMethod("void afterUnmarshal_jtimber (javax.xml.bind.Unmarshaller, java.lang.Object)");
-
-    private boolean                               containsCustomAfterUnmarshalMethod;
-
-    private final List<Field>                     fields                       = new ArrayList<>();
-    private final List<Triple<Field, Type, Type>> fieldsForWrapperSubstitution = new ArrayList<>();
+    private boolean             containsCustomAfterUnmarshalMethod;
 
     /**
-     * Creates a new insert JAXB tweaks class adapter.
+     * Creates a new insert JAXB tweaks class transformer.
      * 
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
+     * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */
-    public InsertJAXBTweaksClassAdapter(ClassVisitor cv) {
+    public InsertJAXBTweaksClassTransformer(ClassVisitor cv, ClassMetadata metadata) {
 
-        super(cv);
-    }
-
-    @Override
-    public FieldVisitor visitField(int access, final String name, String desc, String signature, Object value) {
-
-        // Create a representation of the field
-        final Field field = new Field(name, Type.getType(desc));
-
-        // Add the field to the "fields" list
-        fields.add(field);
-
-        // This annotation visitor expects "@SubstituteWithWrapper" annotations, parses them and adds their data to the list "fieldsForWrapperSubstitution"
-        final class AnnotationVisitorImpl extends AnnotationVisitor {
-
-            private Type wrapperType;
-            private Type wrapperConstructorArgType;
-
-            private AnnotationVisitorImpl(AnnotationVisitor av) {
-
-                super(ASM5, av);
-            }
-
-            @Override
-            public void visit(String name, Object value) {
-
-                if (name.equals("value")) {
-                    wrapperType = (Type) value;
-                } else if (name.equals("wrapperConstructorArg")) {
-                    wrapperConstructorArgType = (Type) value;
-
-                    if (wrapperConstructorArgType.equals(SWW_DEFAULT_CLASS)) {
-                        wrapperConstructorArgType = null;
-                    }
-                }
-
-            }
-
-            @Override
-            public void visitEnd() {
-
-                fieldsForWrapperSubstitution.add(Triple.of(field, wrapperType, wrapperConstructorArgType));
-            }
-
-        }
-
-        // This field visitor does two things:
-        // - It removes the field from the "fields" list if the "@Weak" annotation is present
-        // - It "invokes" the AnnotationVisitorImpl with a possibly found "@SubstituteWithWrapper" annotation
-        final class FieldVisitorImpl extends FieldVisitor {
-
-            private FieldVisitorImpl(FieldVisitor fv) {
-
-                super(ASM5, fv);
-            }
-
-            @Override
-            public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-
-                if (desc.equals(WEAK_CLASS.getDescriptor())) {
-                    fields.remove(field);
-                }
-
-                AnnotationVisitor av = super.visitAnnotation(desc, visible);
-                if (desc.equals(SWW_CLASS.getDescriptor()) && av != null) {
-                    av = new AnnotationVisitorImpl(av);
-                }
-                return av;
-            }
-
-        }
-
-        // Return a FieldVisitorImpl
-        FieldVisitor fv = super.visitField(access, name, desc, signature, value);
-        if (fv != null) {
-            fv = new FieldVisitorImpl(fv);
-        }
-        return fv;
+        super(cv, metadata);
     }
 
     @Override
@@ -169,7 +84,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
                         super.visitVarInsn(ALOAD, 1);
                         super.visitVarInsn(ALOAD, 2);
                         // Invoke the method
-                        super.visitMethodInsn(INVOKEVIRTUAL, classType.getInternalName(), ADDED_AFTER_UNMARSHAL_METHOD.getName(), ADDED_AFTER_UNMARSHAL_METHOD.getDescriptor(), false);
+                        super.visitMethodInsn(INVOKEVIRTUAL, metadata.classType.getInternalName(), ADDED_AFTER_UNMARSHAL_METHOD.getName(), ADDED_AFTER_UNMARSHAL_METHOD.getDescriptor(), false);
                     }
 
                 };
@@ -187,7 +102,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
          * Add the afterUnmarshal() method.
          */
 
-        if (!fields.isEmpty()) {
+        if (!metadata.getNonWeakFields().isEmpty()) {
             // If the method is necessary ...
             if (containsCustomAfterUnmarshalMethod) {
                 // ... and the class already contains afterUnmarshal(), generate the method as afterUnmarshal_jtimber()
@@ -213,15 +128,15 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
          * Iterate through all fields annotated with "SubstituteWithWrapper" and replace their current value with their current value wrapped inside a wrapper.
          * This section first reads the current field value, then creates a new wrapper which wraps around that field value, and finally sets the field to the wrapper.
          */
-        for (Triple<Field, Type, Type> field : fieldsForWrapperSubstitution) {
-            String fieldName = field.getLeft().getName();
-            Type fieldType = field.getLeft().getType();
-            Type wrapperType = field.getMiddle();
+        for (Entry<String, Pair<Type, Type>> field : metadata.wrapperSubstitutedFields.entrySet()) {
+            String fieldName = field.getKey();
+            Type fieldType = metadata.fields.get(fieldName);
+            Type wrapperType = field.getValue().getLeft();
             // Null means "default"; in that case, the field type is used as the type of the first argument of the wrapper constructor
-            Type wrapperConstructorArgType = field.getRight() == null ? fieldType : field.getRight();
+            Type wrapperConstructorArgType = field.getValue().getRight() == null ? fieldType : field.getValue().getRight();
 
             // Retrieve the current field value and jump over the wrapping code if the field value is null
-            ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
+            ASMUtils.generateGetField(mg, metadata.classType, fieldName, fieldType);
             Label endIf = new Label();
             mg.ifNull(endIf);
 
@@ -241,7 +156,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
                     // ----- Stack: [this, wrapper, wrapper]
 
                     // Retrieve the current field value
-                    ASMUtils.generateGetField(mg, classType, fieldName, fieldType);
+                    ASMUtils.generateGetField(mg, metadata.classType, fieldName, fieldType);
 
                     // ----- Stack: [this, wrapper, wrapper, fieldValue]
 
@@ -253,7 +168,7 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
                 // Store the new wrapper in the field the value has been retrieved from before
                 // The substitution is complete
-                mg.putField(classType, fieldName, fieldType);
+                mg.putField(metadata.classType, fieldName, fieldType);
 
                 // ----- Stack: []
             }
@@ -263,10 +178,12 @@ public final class InsertJAXBTweaksClassAdapter extends CommonBaseClassAdapter {
 
         /*
          * Iterate through all fields.
-         * For each field, call the addParent() method with "this" as parent if the current field value is parent-aware
+         * For each field, call the addParent() method with "this" as parent if the current field value is parent-aware.
          */
-        for (Field field : fields) {
-            ASMUtils.generateGetField(mg, classType, field.getName(), field.getType());
+        for (String fieldName : metadata.getNonWeakFields()) {
+            Type fieldType = metadata.fields.get(fieldName);
+
+            ASMUtils.generateGetField(mg, metadata.classType, fieldName, fieldType);
 
             // ----- Stack: [fieldValue]
 

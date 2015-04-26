@@ -16,35 +16,36 @@
  * along with JTimber. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.quartercode.jtimber.rh.agent.asm;
+package com.quartercode.jtimber.rh.agent.asm.index;
 
-import static org.objectweb.asm.Opcodes.ASM5;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Type;
+import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
+import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
 
 /**
- * A common base class for all ASM {@link ClassVisitor}s used by the runtime hook.
+ * The class indexer which indexes all {@link ClassMetadata#fields fields} of the processed class.
  */
-class CommonBaseClassAdapter extends ClassVisitor {
-
-    protected Type classType;
+public final class FieldsClassIndexer extends MetadataAwareClassVisitor {
 
     /**
-     * Creates a new common base class adapter.
+     * Creates a new fields class indexer.
      * 
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
+     * @param metadata The {@link ClassMetadata} object the indexed metadata should be stored in.
      */
-    protected CommonBaseClassAdapter(ClassVisitor cv) {
+    public FieldsClassIndexer(ClassVisitor cv, ClassMetadata metadata) {
 
-        super(ASM5, cv);
+        super(cv, metadata);
     }
 
     @Override
-    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
 
-        classType = Type.getObjectType(name);
+        metadata.fields.put(name, Type.getType(desc));
 
-        super.visit(version, access, name, signature, superName, interfaces);
+        return super.visitField(access, name, desc, signature, value);
     }
 
 }

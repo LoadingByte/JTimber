@@ -16,48 +16,32 @@
  * along with JTimber. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.quartercode.jtimber.rh.agent.asm;
+package com.quartercode.jtimber.rh.agent.asm.transform;
 
 import static org.objectweb.asm.Opcodes.*;
-import java.util.HashSet;
-import java.util.Set;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
+import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
+import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
 import com.quartercode.jtimber.rh.agent.util.ASMUtils;
-import com.quartercode.jtimber.rh.agent.util.AnnotatedFieldRecorder;
 
 /**
  * The {@link ClassVisitor} which adds so called "parent watchers" to nodes in order to track the parents of parent-aware objects.
  * Note that it transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
-public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapter {
-
-    private static final Type WEAK_CLASS = Type.getObjectType("com/quartercode/jtimber/api/node/Weak");
-
-    private final Set<String> weakFields = new HashSet<>();
+public final class InsertParentWatcherClassTransformer extends MetadataAwareClassVisitor {
 
     /**
-     * Creates a new insert parent watcher class adapter.
+     * Creates a new insert parent watcher class transformer.
      * 
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
+     * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */
-    public InsertParentWatcherClassAdapter(ClassVisitor cv) {
+    public InsertParentWatcherClassTransformer(ClassVisitor cv, ClassMetadata metadata) {
 
-        super(cv);
-    }
-
-    @Override
-    public FieldVisitor visitField(int access, final String name, String desc, String signature, Object value) {
-
-        // Return an AnnotatedFieldRecorder which adds all fields annotated with "@Weak" to the "weakFields" set
-        FieldVisitor fv = super.visitField(access, name, desc, signature, value);
-        if (fv != null) {
-            fv = new AnnotatedFieldRecorder(fv, name, WEAK_CLASS, weakFields);
-        }
-        return fv;
+        super(cv, metadata);
     }
 
     @Override
@@ -90,7 +74,7 @@ public final class InsertParentWatcherClassAdapter extends CommonBaseClassAdapte
              * add the parent watcher code around the instruction.
              * Note that the instructions inside this block make sure to reconstruct the original stack.
              */
-            if (opcode == PUTFIELD && !weakFields.contains(name) && Type.getType(desc).getSort() == Type.OBJECT && owner.equals(classType.getInternalName())) {
+            if (opcode == PUTFIELD && !metadata.weakFields.contains(name) && Type.getType(desc).getSort() == Type.OBJECT && owner.equals(metadata.classType.getInternalName())) {
                 /*
                  * If a parent-aware object is already present in the field, remove "this" from its parents.
                  */
