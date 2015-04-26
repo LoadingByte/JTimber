@@ -18,26 +18,25 @@
 
 package com.quartercode.jtimber.rh.agent.asm.util;
 
-import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
 
 /**
  * A utility class which contains some utility methods used by ASM transformers.
  */
 public class ASMUtils {
 
-    private static final String API_PCKG           = "com/quartercode/jtimber/api";
-    private static final String PARENT_AWARE_CLASS = API_PCKG + "/node/ParentAware";
-    private static final String NODE_DESC          = "L" + API_PCKG + "/node/Node;";
+    private static final Type   PARENT_AWARE_CLASS = Type.getObjectType("com/quartercode/jtimber/api/node/ParentAware");
+    private static final String NODE_FQCN          = "com.quartercode.jtimber.api.node.Node";
 
     /**
      * Generates the instructions to push a non-static field onto the stack and box it in case it is a primitive.
      * This is just a handy shortcut. However, it requires a {@link GeneratorAdapter} method visitor.
      * 
-     * @param mg The method visitor that should be used to generate the instructions (must be a generator adapter).
+     * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
      * @param classType The {@link Type} of the class which contains the field.
      * @param fieldName The name of the field.
      * @param fieldType The type of the field.
@@ -59,30 +58,30 @@ public class ASMUtils {
      * The object the operation should be performed on needs to be the topmost value on the stack when the generated instructions are entered.
      * The rest of the stack is ignored by the generated instructions.
      * 
-     * @param mv The {@link MethodVisitor} that should be used to generate the instructions.
+     * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
      * @param methodName The name of the method to call ({@code "addParent"} or {@code "removeParent"}).
      */
-    public static void generateAddOrRemoveThisAsParent(MethodVisitor mv, String methodName) {
+    public static void generateAddOrRemoveThisAsParent(GeneratorAdapter mg, String methodName) {
 
         // Skip the if-block if the condition below isn't true
         Label endIf = new Label();
-        mv.visitInsn(DUP);
-        mv.visitTypeInsn(INSTANCEOF, PARENT_AWARE_CLASS);
-        mv.visitJumpInsn(IFEQ, endIf);
+        mg.dup();
+        mg.instanceOf(PARENT_AWARE_CLASS);
+        mg.ifZCmp(GeneratorAdapter.EQ, endIf);
 
         /* if (object instanceof ParentAware) */
         {
             // Push a copy of the value because the parent watcher method will be invoked on it
-            mv.visitInsn(DUP);
+            mg.dup();
 
             // Push "this" because it will be used as the first argument for the following method call
-            mv.visitVarInsn(ALOAD, 0);
+            mg.loadThis();
 
             // Invoke the parent watcher method on the value (which implements the "ParentAware" interface) using "this" as the first argument
-            mv.visitMethodInsn(INVOKEINTERFACE, PARENT_AWARE_CLASS, methodName, "(" + NODE_DESC + ")V", true);
+            mg.invokeInterface(PARENT_AWARE_CLASS, Method.getMethod("void " + methodName + " (" + NODE_FQCN + ")"));
         }
 
-        mv.visitLabel(endIf);
+        mg.visitLabel(endIf);
     }
 
     private ASMUtils() {

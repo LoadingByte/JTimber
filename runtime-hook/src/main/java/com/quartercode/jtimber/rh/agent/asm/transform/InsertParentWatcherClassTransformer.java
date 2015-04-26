@@ -22,6 +22,7 @@ import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
 import com.quartercode.jtimber.rh.agent.asm.ClassMetadata;
 import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
 import com.quartercode.jtimber.rh.agent.asm.util.ASMUtils;
@@ -50,7 +51,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
         // Return an InsertParentWatcherMethodAdapter
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if (mv != null) {
-            mv = new InsertParentWatcherMethodAdapter(mv);
+            mv = new InsertParentWatcherMethodAdapter(mv, access, name, desc);
         }
         return mv;
     }
@@ -59,11 +60,11 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
      * The method adapter internally used by the InsertParentWatcherClassAdapter.
      * It adds parent watcher instructions around each PUTFIELD instruction (for allowed fields).
      */
-    private final class InsertParentWatcherMethodAdapter extends MethodVisitor {
+    private final class InsertParentWatcherMethodAdapter extends GeneratorAdapter {
 
-        private InsertParentWatcherMethodAdapter(MethodVisitor mv) {
+        private InsertParentWatcherMethodAdapter(MethodVisitor mv, int access, String name, String desc) {
 
-            super(ASM5, mv);
+            super(ASM5, mv, access, name, desc);
         }
 
         @Override
@@ -84,7 +85,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
                 super.visitFieldInsn(GETFIELD, owner, name, desc);
 
                 // Write a remove parent instruction set that uses the recently pushed "old" object
-                ASMUtils.generateAddOrRemoveThisAsParent(mv, "removeParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(this, "removeParent");
 
                 // Discard the "old" field value pushed earlier
                 super.visitInsn(POP);
@@ -95,7 +96,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
 
                 // Write an add parent instruction set that uses the "new" object already on the stack
                 // No popping is necessary afterwards because the "new" object will be used by the next instruction
-                ASMUtils.generateAddOrRemoveThisAsParent(mv, "addParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(this, "addParent");
             }
 
             // Write the actual field instruction by calling the next visitor
