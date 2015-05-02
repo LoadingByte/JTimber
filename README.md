@@ -2,7 +2,7 @@ JTimber
 =======
 
 JTimber is a framework that supports the creation of complex Java object trees by introducing concepts like object parent storage.
-More information can be found on the [wiki page](http://quartercode.com/wiki/JTimber).
+More information and downloads can be found on the [wiki page](http://quartercode.com/wiki/JTimber).
 
 License
 -------
@@ -22,15 +22,3 @@ We use maven to handle our dependencies and build, so you need the Java JDK and 
 * Navigate to the project folder of this repository which contains a `pom.xml` and run:
 
         mvn clean install
-
-Builds
-------
-
-* JTimber is built by a [Jenkins job](http://ci.quartercode.com/job/JTimber/) on the QuarterCode Jenkins instance.
-* Finished builds can be downloaded from the [QuarterCode DL website](http://quartercode.com/dl/projects/details?projectId=JTimber).
-* Builds are also available on the [QuarterCode maven repository](http://repo.quartercode.com).
-
-Usage
------
-
-For information on the usage of JTimber, visit the [wiki page](http://quartercode.com/wiki/JTimber).
