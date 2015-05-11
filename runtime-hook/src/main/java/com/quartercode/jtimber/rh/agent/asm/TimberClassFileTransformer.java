@@ -32,7 +32,6 @@ import com.quartercode.jtimber.rh.agent.asm.index.WrapperSubstitutedFieldsClassI
 import com.quartercode.jtimber.rh.agent.asm.transform.InsertChildAccessorsClassTransformer;
 import com.quartercode.jtimber.rh.agent.asm.transform.InsertJAXBTweaksClassTransformer;
 import com.quartercode.jtimber.rh.agent.asm.transform.InsertParentWatcherClassTransformer;
-import com.quartercode.jtimber.rh.agent.asm.transform.InsertWeakRefWatcherClassTransformer;
 import com.quartercode.jtimber.rh.agent.asm.transform.InsertWrapperSubstitutionClassTransformer;
 
 /**
@@ -92,11 +91,9 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         ClassVisitor next = target;
 
         // Order requirements:
-        // - InsertWeakRefWatcherCT after all transformers that add/remove/manipulate GETFIELD instructions
         // - InsertJAXBTweaksCT after InsertParentWatcherCT because there shouldn't be any parent watchers in the afterUnmarshal() method
         // - InsertJAXBTweaksCT after InsertWrapperSubstitutionCT because there shouldn't be any wrapper substitutions in the afterUnmarshal() method
         // - InsertParentWatcherCT after InsertWrapperSubstitutionCT because the parent watcher should handle new wrappers instead of the original (now wrapped) objects
-        next = new InsertWeakRefWatcherClassTransformer(next, metadata);
         next = new InsertJAXBTweaksClassTransformer(next, metadata);
         next = new InsertChildAccessorsClassTransformer(next, metadata);
         next = new InsertParentWatcherClassTransformer(next, metadata);
