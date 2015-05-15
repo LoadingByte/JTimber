@@ -85,7 +85,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
                 super.visitFieldInsn(GETFIELD, owner, name, desc);
 
                 // Write a remove parent instruction set that uses the recently pushed "old" object
-                ASMUtils.generateAddOrRemoveThisAsParent(this, "removeParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(this, false /* removeParent() */);
 
                 // Discard the "old" field value pushed earlier
                 super.visitInsn(POP);
@@ -96,7 +96,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
 
                 // Write an add parent instruction set that uses the "new" object already on the stack
                 // No popping is necessary afterwards because the "new" object will be used by the next instruction
-                ASMUtils.generateAddOrRemoveThisAsParent(this, "addParent");
+                ASMUtils.generateAddOrRemoveThisAsParent(this, true /* addParent() */);
             }
 
             // Write the actual field instruction by calling the next visitor

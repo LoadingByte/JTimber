@@ -19,6 +19,8 @@
 package com.quartercode.jtimber.api.internal;
 
 import java.util.List;
+import com.quartercode.jtimber.api.node.Node;
+import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
@@ -27,6 +29,27 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * Otherwise, the runtime hook would have to manually inject their functionality into the bytecode, making it more difficult to understand.
  */
 public class RHConstFunctions {
+
+    // ----- Parents -----
+
+    /**
+     * Adds the given parent {@link Node} to or removes it from the given child object <b>if</b> the child object is not {@code null} and {@link ParentAware}.
+     * Otherwise, nothing happens.
+     * 
+     * @param child The child object the given parent node should be added to or removed from.
+     * @param parent The parent node which should be added to or removed from the given child object.
+     * @param add Whether the given parent node should be added to ({@code true}) or the removed from ({@code false}) the given child object.
+     */
+    public static void addOrRemoveParent(Object child, Node<?> parent, boolean add) {
+
+        if (child instanceof ParentAware) {
+            if (add) {
+                ((ParentAware<?>) child).addParent(parent);
+            } else {
+                ((ParentAware<?>) child).removeParent(parent);
+            }
+        }
+    }
 
     // ----- Children -----
 
@@ -76,6 +99,43 @@ public class RHConstFunctions {
             return count;
         } else {
             return 1;
+        }
+    }
+
+    // ----- Wrappers -----
+
+    /**
+     * Tries to wrap the given original object in a new wrapper of the given type.
+     * That is done by constructing a new wrapper using the original object as first and only constructor argument.
+     * 
+     * @param forWrapping The object that should be wrapped.
+     * @param wrapperType The type of the wrapper that should be constructed.
+     * @param wrapperConstructorArgType The type of the single argument of the wrapper constructor that should be called.
+     *        Note that the given {@code forWrapping} object must be an instance of this type.
+     *        Otherwise, the object is returned unchanged.
+     * @return The new wrapper around the given {@code forWrapping} object.
+     *         If the given original object is not compatible with the wrapper, the object is returned unchanged.
+     */
+    public static Object tryWrap(Object forWrapping, Class<? extends Wrapper> wrapperType, Class<?> wrapperConstructorArgType) {
+
+        // If the object to be wrapped is null or not an instance of the specified wrapper constructor arg type, return the original object without wrapping it
+        if (!wrapperConstructorArgType.isInstance(forWrapping)) {
+            return forWrapping;
+        }
+
+        // Otherwise, try to create and return a new wrapper that wraps around the given object
+        try {
+            return wrapperType.getConstructor(wrapperConstructorArgType).newInstance(forWrapping);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Cannot find constructor 'public " + wrapperType.getSimpleName() + " (" + wrapperConstructorArgType.getName() + ")'"
+                    + " in wrapper '" + wrapperType.getName() + "'.\n"
+                    + "Try to specify a custom wrapper constructor argument type in the according @SubstituteWithWrapper annotation"
+                    + " (you can find the affected field by looking at the second stack trace entry).\n"
+                    + "For example, for 'ListWrapper' the argument type would be 'java.util.List'.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while trying to create new instance of wrapper '" + wrapperType.getName() + "'"
+                    + " with constructor arg '" + forWrapping + "' (is of type '" + forWrapping.getClass().getName() + "'"
+                    + ", minimum type is '" + wrapperConstructorArgType.getName() + "')", e);
         }
     }
 

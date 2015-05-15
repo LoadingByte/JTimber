@@ -63,12 +63,12 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
 
         // Reader and writer
         ClassReader reader = new ClassReader(classfileBuffer);
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
         // Collect metadata about the class and then call the transformers
         ClassMetadata metadata = new ClassMetadata();
-        reader.accept(createIndexerChain(metadata), ClassReader.SKIP_FRAMES);
-        reader.accept(createTransformerChain(writer, metadata), ClassReader.SKIP_FRAMES);
+        reader.accept(createIndexerChain(metadata), 0);
+        reader.accept(createTransformerChain(writer, metadata), 0);
 
         return writer.toByteArray();
     }

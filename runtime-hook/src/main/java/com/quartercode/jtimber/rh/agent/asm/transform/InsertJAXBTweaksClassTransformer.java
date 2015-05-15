@@ -167,7 +167,7 @@ public final class InsertJAXBTweaksClassTransformer extends MetadataAwareClassVi
 
             // ----- Stack: [fieldValue]
 
-            ASMUtils.generateAddOrRemoveThisAsParent(mg, "addParent");
+            ASMUtils.generateAddOrRemoveThisAsParent(mg, true /* addParent() */);
         }
 
         // End the method
