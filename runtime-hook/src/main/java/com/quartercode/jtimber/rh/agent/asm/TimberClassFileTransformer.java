@@ -74,7 +74,7 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         // Collect metadata about the class and then call the transformers
         ClassMetadata metadata = new ClassMetadata();
         reader.accept(createIndexerChain(metadata), 0);
-        reader.accept(createTransformerChain(writer, metadata), 0);
+        reader.accept(createTransformerChain(writer, metadata), ClassReader.EXPAND_FRAMES);
 
         return writer.toByteArray();
     }
