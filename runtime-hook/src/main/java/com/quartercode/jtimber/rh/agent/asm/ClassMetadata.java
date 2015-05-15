@@ -18,8 +18,8 @@
 
 package com.quartercode.jtimber.rh.agent.asm;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
@@ -54,19 +54,19 @@ public class ClassMetadata {
     /**
      * The names of all fields of the represented class, along with their {@link Type}s.
      */
-    public final Map<String, Type>             fields                   = new HashMap<>();
+    public final Map<String, Type>             fields                   = new LinkedHashMap<>();
 
     /**
      * The names of all {@link #fields} of the represented class that are annotated with the {@code @Weak} annotation.
      */
-    public final Set<String>                   weakFields               = new HashSet<>();
+    public final Set<String>                   weakFields               = new LinkedHashSet<>();
 
     /**
      * The names of all {@link #fields} of the represented class that are annotated with the {@code @SubstituteWithWrapper} annotation.
      * Note that the two parameters of the annotation ({@code value} and {@code wrapperConstructorArg}) are stored in {@link Pair}s mapped to the field names.
      * Note that the {@code wrapperConstructorArg} parameter might be {@code null} if no one is set explicitly.
      */
-    public final Map<String, Pair<Type, Type>> wrapperSubstitutedFields = new HashMap<>();
+    public final Map<String, Pair<Type, Type>> wrapperSubstitutedFields = new LinkedHashMap<>();
 
     /**
      * Returns the names of all {@link #fields} of the represented class that are not {@link #weakFields weak} (annotated with the {@code @Weak} annotation).
@@ -75,7 +75,7 @@ public class ClassMetadata {
      */
     public Set<String> getNonWeakFields() {
 
-        Set<String> result = new HashSet<>(fields.keySet());
+        Set<String> result = new LinkedHashSet<>(fields.keySet());
         result.removeAll(weakFields);
         return result;
     }
