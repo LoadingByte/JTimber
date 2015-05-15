@@ -25,6 +25,8 @@ import java.util.Set;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.quartercode.jtimber.rh.agent.asm.index.ClassTypesClassIndexer;
 import com.quartercode.jtimber.rh.agent.asm.index.FieldsClassIndexer;
 import com.quartercode.jtimber.rh.agent.asm.index.WeakFieldsClassIndexer;
@@ -40,7 +42,9 @@ import com.quartercode.jtimber.rh.agent.asm.transform.InsertWrapperSubstitutionC
  */
 public class TimberClassFileTransformer implements ClassFileTransformer {
 
-    private final Set<String> nodeIndex;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimberClassFileTransformer.class);
+
+    private final Set<String>   nodeIndex;
 
     /**
      * Creates a new timber class file transformer that only transforms nodes.
@@ -60,6 +64,8 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
         if (!nodeIndex.contains(className)) {
             return classfileBuffer;
         }
+
+        LOGGER.trace("Adding JTimber transformations to class '{}'", className);
 
         // Reader and writer
         ClassReader reader = new ClassReader(classfileBuffer);
