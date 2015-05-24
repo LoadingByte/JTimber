@@ -49,7 +49,7 @@ public final class InsertChildAccessorsClassTransformer extends MetadataAwareCla
 
     /**
      * Creates a new insert child accessors class transformer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */

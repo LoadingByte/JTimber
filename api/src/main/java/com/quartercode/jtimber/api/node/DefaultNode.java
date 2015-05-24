@@ -25,11 +25,11 @@ import java.util.List;
  * The child accessors are overridden for each implementation of {@link Node} (not only DefaultNode) at runtime.
  * Therefore, this class just provides empty dummy methods which do nothing (because they will be removed at runtime).
  * For the implementation of {@link ParentAware} functionality, it just extends the {@link DefaultParentAware} implementation.
- * 
+ *
  * @param <P> The type of {@link Node}s that are able to be parents of this node.
  *        Note that all parents are verified against this type at runtime.
  *        Only parent nodes which are a compatible with this type are allowed.
- * 
+ *
  * @see Node
  * @see DefaultParentAware
  */

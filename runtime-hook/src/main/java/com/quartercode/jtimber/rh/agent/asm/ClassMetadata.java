@@ -70,7 +70,7 @@ public class ClassMetadata {
 
     /**
      * Returns the names of all {@link #fields} of the represented class that are not {@link #weakFields weak} (annotated with the {@code @Weak} annotation).
-     * 
+     *
      * @return The names of all non-weak fields of the represented class.
      */
     public Set<String> getNonWeakFields() {

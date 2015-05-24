@@ -37,7 +37,7 @@ public final class WrapperSubstitutedFieldsClassIndexer extends MetadataAwareCla
 
     /**
      * Creates a new wrapper substituted fields class indexer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the indexed metadata should be stored in.
      */

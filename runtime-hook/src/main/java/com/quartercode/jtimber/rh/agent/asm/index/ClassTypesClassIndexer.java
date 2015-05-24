@@ -26,7 +26,7 @@ import com.quartercode.jtimber.rh.agent.asm.MetadataAwareClassVisitor;
 
 /**
  * The class indexer which indexes the following class metadata:
- * 
+ *
  * <ul>
  * <li>{@link ClassMetadata#classType The type of the processed class}</li>
  * <li>{@link ClassMetadata#superclassType The type of the superclass of the processed class}</li>
@@ -39,7 +39,7 @@ public final class ClassTypesClassIndexer extends MetadataAwareClassVisitor {
 
     /**
      * Creates a new class types class indexer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the indexed metadata should be stored in.
      * @param nodeIndex The index that marks which classes are nodes.

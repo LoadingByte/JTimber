@@ -32,7 +32,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * <br>
  * <b>Important note:</b> This wrapper doesn't support JAXB persistence (yet).
  * If you need that feature, use collections and the {@link CollectionWrapper} (or subclasses for lists etc.) instead.
- * 
+ *
  * @param <E> The type of elements in the wrapped one-dimensional array.
  * @see Wrapper
  */
@@ -43,7 +43,7 @@ public class ArrayWrapper<E> extends AbstractWrapper {
 
     /**
      * Creates a new array {@link Wrapper} that wraps around the given one-dimensional array.
-     * 
+     *
      * @param wrapped The one-dimensional array the new array wrapper wraps around.
      */
     public ArrayWrapper(E[] wrapped) {
@@ -92,7 +92,7 @@ public class ArrayWrapper<E> extends AbstractWrapper {
 
     /**
      * Returns the length (or the size) of the one-dimensional array.
-     * 
+     *
      * @return The length of the array.
      */
     public int length() {
@@ -102,7 +102,7 @@ public class ArrayWrapper<E> extends AbstractWrapper {
 
     /**
      * Returns the element which is stored at the given index inside the one-dimensional array.
-     * 
+     *
      * @param index The index at which the element for return is stored.
      * @return The element which is stored at the given index.
      */
@@ -113,7 +113,7 @@ public class ArrayWrapper<E> extends AbstractWrapper {
 
     /**
      * Sets the element which should be stored at the given index inside the one-dimensional array.
-     * 
+     *
      * @param index The index at which the element should be stored.
      * @param value The element which should be stored at the given index.
      */
@@ -138,7 +138,7 @@ public class ArrayWrapper<E> extends AbstractWrapper {
     /**
      * Returns a clone of the wrapped one-dimensional array.
      * This method internally calls the {@link Object#clone() clone} method on the wrapped array.
-     * 
+     *
      * @return A clone of the wrapped array.
      */
     public E[] cloneArray() {

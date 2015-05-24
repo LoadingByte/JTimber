@@ -32,7 +32,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * See {@link Wrapper} for more details on what wrappers are and what they are used for.<br>
  * <br>
  * Note that this wrapper also implements the collection interface in order to allow it being used like any other collection.
- * 
+ *
  * @param <E> The type of elements in the wrapped collection.
  * @see Collection
  * @see Wrapper
@@ -44,7 +44,7 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
 
     /**
      * Creates a new {@link Collection} {@link Wrapper} that wraps around the given collection.
-     * 
+     *
      * @param wrapped The collection the new collection wrapper wraps around.
      */
     public CollectionWrapper(Collection<E> wrapped) {
@@ -94,7 +94,7 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
     /**
      * Internal method that should be called whenever an object is added to the wrapped {@link Collection}.
      * If the new object is {@link ParentAware}, this method adjusts the parents of that new element by adding the parents of this wrapper.
-     * 
+     *
      * @param element The element that is added to the underlying collection.
      */
     protected void addElement(Object element) {
@@ -109,7 +109,7 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
     /**
      * Internal method that should be called whenever an object is removed from the wrapped {@link Collection}.
      * If the removed object is {@link ParentAware}, this method adjusts the parents of that removed element by removing the parents of this wrapper.
-     * 
+     *
      * @param element The element that is removed from the underlying collection.
      */
     protected void removeElement(Object element) {
@@ -248,7 +248,7 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
 
     /**
      * An internal {@link Iterator} implementation that wraps around a real iterator and adjusts the parents of removed elements.
-     * 
+     *
      * @see CollectionWrapper
      */
     protected class IteratorWrapper implements Iterator<E> {
@@ -262,7 +262,7 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
 
         /**
          * Creates a new iterator wrapper that wraps around the given {@link Iterator}.
-         * 
+         *
          * @param wrapped The iterator the new iterator wrapper wraps around.
          */
         protected IteratorWrapper(Iterator<E> wrapped) {

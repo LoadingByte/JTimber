@@ -30,7 +30,7 @@ public class MultipleParentsException extends RuntimeException {
 
     /**
      * Creates a new multiple parents exception.
-     * 
+     *
      * @param object The {@link ParentAware} object the {@link ParentAware#getSingleParent()} method was called on although the object has multiple parents.
      */
     public MultipleParentsException(ParentAware<?> object) {
@@ -40,7 +40,7 @@ public class MultipleParentsException extends RuntimeException {
 
     /**
      * Creates a new multiple parents exception with a detail message that describes the error.
-     * 
+     *
      * @param object The {@link ParentAware} object the {@link ParentAware#getSingleParent()} method was called on although the object has multiple parents.
      * @param message A detail message which describes the error that occurred.
      */
@@ -53,7 +53,7 @@ public class MultipleParentsException extends RuntimeException {
 
     /**
      * Creates a new multiple parents exception with the exception that caused the error.
-     * 
+     *
      * @param object The {@link ParentAware} object the {@link ParentAware#getSingleParent()} method was called on although the object has multiple parents.
      * @param cause The exception which caused the error in the first place.
      */
@@ -66,7 +66,7 @@ public class MultipleParentsException extends RuntimeException {
 
     /**
      * Creates a new multiple parents exception with a detail message that describes the error and the exception that caused it.
-     * 
+     *
      * @param object The {@link ParentAware} object the {@link ParentAware#getSingleParent()} method was called on although the object has multiple parents.
      * @param message A detail message which describes the error that occurred.
      * @param cause The exception which caused the error in the first place.
@@ -80,7 +80,7 @@ public class MultipleParentsException extends RuntimeException {
 
     /**
      * Returns the {@link ParentAware} object the {@link ParentAware#getSingleParent()} method was called on although the object has multiple parents.
-     * 
+     *
      * @return The affected parent-aware object.
      */
     public ParentAware<?> getObject() {

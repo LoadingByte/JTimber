@@ -35,7 +35,7 @@ public abstract class MetadataAwareClassVisitor extends ClassVisitor {
 
     /**
      * Creates a new metadata-aware class visitor.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object for the processed class.
      *        It can either be used to store or to retrieve metdata about the class.

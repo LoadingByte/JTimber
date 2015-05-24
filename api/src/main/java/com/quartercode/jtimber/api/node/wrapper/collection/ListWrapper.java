@@ -29,7 +29,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * <br>
  * Note that this wrapper also implements the list interface in order to allow it being used like any other list.
  * Also note that the wrapper extends the {@link CollectionWrapper} in order to inherit its functionality.
- * 
+ *
  * @param <E> The type of elements in the wrapped list.
  * @see List
  * @see Wrapper
@@ -41,7 +41,7 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
 
     /**
      * Creates a new {@link List} {@link Wrapper} that wraps around the given list.
-     * 
+     *
      * @param wrapped The list the new list wrapper wraps around.
      */
     public ListWrapper(List<E> wrapped) {
@@ -146,7 +146,7 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
     /**
      * An internal {@link ListIterator} implementation that wraps around a real list iterator and adjusts the parents of added and removed elements.
      * It extends the {@link CollectionWrapper.IteratorWrapper} in order to inherit its basic functionality.
-     * 
+     *
      * @see ListWrapper
      */
     protected class ListIteratorWrapper extends IteratorWrapper implements ListIterator<E> {
@@ -155,7 +155,7 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
 
         /**
          * Creates a new list iterator wrapper that wraps around the given {@link ListIterator}.
-         * 
+         *
          * @param wrapped The list iterator the new list iterator wrapper wraps around.
          */
         protected ListIteratorWrapper(ListIterator<E> wrapped) {

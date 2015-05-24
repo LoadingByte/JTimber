@@ -35,7 +35,7 @@ public class AnnotatedFieldRecorder extends FieldVisitor {
 
     /**
      * Creates a new annotated field recorder.
-     * 
+     *
      * @param fv The field visitor to which this visitor must delegate method calls. May be {@code null}.
      * @param fieldName The name of the field the visitor should process.
      * @param annotation The annotation {@link Type} the visitor should look out for.

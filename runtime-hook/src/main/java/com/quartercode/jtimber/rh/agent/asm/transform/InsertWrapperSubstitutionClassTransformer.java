@@ -40,7 +40,7 @@ public final class InsertWrapperSubstitutionClassTransformer extends MetadataAwa
 
     /**
      * Creates a new insert wrapper substitution class transformer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */

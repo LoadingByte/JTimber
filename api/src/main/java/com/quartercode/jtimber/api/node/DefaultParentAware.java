@@ -26,11 +26,11 @@ import net.jodah.typetools.TypeResolver;
 /**
  * The default implementation of the {@link ParentAware} interface.
  * It stores the parent collection using an {@link ArrayList}, held in a {@code transient} field.
- * 
+ *
  * @param <P> The type of {@link Node}s that are able to be parents of this parent-aware object.
  *        Note that all parents are verified against this type at runtime.
  *        Only parent nodes which are a compatible with this type are allowed.
- * 
+ *
  * @see ParentAware
  */
 public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {

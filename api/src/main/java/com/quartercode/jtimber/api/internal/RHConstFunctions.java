@@ -35,7 +35,7 @@ public class RHConstFunctions {
     /**
      * Adds the given parent {@link Node} to or removes it from the given child object <b>if</b> the child object is not {@code null} and {@link ParentAware}.
      * Otherwise, nothing happens.
-     * 
+     *
      * @param child The child object the given parent node should be added to or removed from.
      * @param parent The parent node which should be added to or removed from the given child object.
      * @param add Whether the given parent node should be added to ({@code true}) or the removed from ({@code false}) the given child object.
@@ -59,7 +59,7 @@ public class RHConstFunctions {
      * If the child object is a {@link Wrapper}, the {@link Wrapper#getActualChildren() actual children} of that wrapper are added to the list.
      * Moreover, if the actual children of the wrapper are also wrappers, those wrappers are resolved as well.
      * Actually, this continues recursively; no wrappers and only actual children will ever be added to the list.
-     * 
+     *
      * @param list The list the child object should be added to.
      * @param child The child object to add to the given list.
      */
@@ -81,7 +81,7 @@ public class RHConstFunctions {
      * If the child object is {@code null}, {@code 0} is returned.
      * If the child object is any other object that a {@link Wrapper}, {@code 1} is returned.
      * If the child object is a wrapper, the actual children are resolved (as described in {@link #addActualChildrenToList(List, Object)}) and their count is returned.
-     * 
+     *
      * @param child The child which represents the returned amount of actual children.
      * @return The amount of actual children represented by the given child object.
      */
@@ -107,7 +107,7 @@ public class RHConstFunctions {
     /**
      * Tries to wrap the given original object in a new wrapper of the given type.
      * That is done by constructing a new wrapper using the original object as first and only constructor argument.
-     * 
+     *
      * @param forWrapping The object that should be wrapped.
      * @param wrapperType The type of the wrapper that should be constructed.
      * @param wrapperConstructorArgType The type of the single argument of the wrapper constructor that should be called.

@@ -27,11 +27,11 @@ import java.util.List;
  * <br>
  * Note that each node is parent-aware as well!
  * Also note that a default implementation of this interface is provided: {@link DefaultParentAware}.
- * 
+ *
  * @param <P> The type of {@link Node}s that are able to be parents of this parent-aware object.
  *        Note that all parents are verified against this type at runtime.
  *        Only parent nodes which are a compatible with this type are allowed.
- * 
+ *
  * @see DefaultParentAware
  * @see Node
  */
@@ -41,7 +41,7 @@ public interface ParentAware<P extends Node<?>> {
      * Returns all {@link Node}s that hold a reference to this parent-aware object in some way.
      * Those nodes are also called "parents" of this object.
      * If a parent node references this object multiple times, the returned list contains that parent node multiple times as well.
-     * 
+     *
      * @return All nodes that reference this object.
      */
     public List<P> getParents();
@@ -51,7 +51,7 @@ public interface ParentAware<P extends Node<?>> {
      * That single node is also called the "parent" of this object.
      * However, this method throws a {@link MultipleParentsException} if this object is referenced by multiple nodes.
      * Note that the exception is not thrown if the same object references this object multiple times (e.g. through multiple fields).
-     * 
+     *
      * @return The one and only node that references this object.
      * @throws MultipleParentsException
      */
@@ -63,7 +63,7 @@ public interface ParentAware<P extends Node<?>> {
      * <br>
      * Note that the result of this method should be the same as the {@link List#size() size} of the {@link #getParents() parents list}.
      * However, this method probably is faster.
-     * 
+     *
      * @return The amount of nodes that reference this object.
      */
     public int getParentCount();
@@ -77,7 +77,7 @@ public interface ParentAware<P extends Node<?>> {
      * Note that this method enforces the type limit imposed by the generic type parameter {@code <P>}.
      * All nodes which are not compatible (same type or subtype) with that generic type parameter cause an {@link IllegalParentTypeException} to be thrown.
      * However, this method still accepts all nodes in order to make the implementation of wrappers easier.
-     * 
+     *
      * @param parent The parent node to add to the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      * @throws IllegalParentTypeException
@@ -89,7 +89,7 @@ public interface ParentAware<P extends Node<?>> {
      * As a result of this method call the given node <b>must</b> be removed from the parents list (if it isn't {@code null}).
      * The node must only be removed once; if it exists twice in the list, only one entry should be removed.
      * <b>Don't call this method if you don't have a reason to do it!</b>
-     * 
+     *
      * @param parent The parent node to remove from the parents list.
      *        If this is {@code null}, nothing should happen. An exception should not be thrown.
      */

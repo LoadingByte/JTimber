@@ -33,12 +33,12 @@ import com.quartercode.jtimber.rh.agent.asm.util.ASMUtils;
 /**
  * The {@link ClassVisitor} which tweaks all node classes in order to properly support JAXB persistence.
  * The visitor adds or modifies the {@code afterUnmarshal()} method in order for it to execute the following actions:
- * 
+ *
  * <ol>
  * <li>Wrap all field values, which are annotated with {@code @SubstituteWithWrapper}, into the specified wrapper and set the fields to that wrapper.</li>
  * <li>Call the {@code addParent()} method (with {@code this} as the first argument) on all fields which are parent-aware.</li>
  * </ol>
- * 
+ *
  * Note that the class visitor transforms all classes that are fed into it.
  * Therefore, only node classes should be sent through it.
  */
@@ -51,7 +51,7 @@ public final class InsertJAXBTweaksClassTransformer extends MetadataAwareClassVi
 
     /**
      * Creates a new insert JAXB tweaks class transformer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */

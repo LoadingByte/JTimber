@@ -49,7 +49,7 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
     /**
      * Creates a new timber class file transformer that only transforms nodes.
      * Which classes are nodes should be listed in the given node index (containing the internal names of node classes).
-     * 
+     *
      * @param nodeIndex The index that marks which classes are nodes and should therefore be transformed.
      */
     public TimberClassFileTransformer(Set<String> nodeIndex) {
@@ -81,7 +81,7 @@ public class TimberClassFileTransformer implements ClassFileTransformer {
 
     private ClassVisitor createIndexerChain(ClassMetadata metadata) {
 
-        // The indexer shouldn't execute any changes; therefore, the result isn't stored anywhere and the target is null
+        // The indexers shouldn't execute any changes; therefore, the result isn't stored anywhere and the target is null
         ClassVisitor next = null;
 
         next = new WrapperSubstitutedFieldsClassIndexer(next, metadata);

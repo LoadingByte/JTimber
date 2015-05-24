@@ -37,7 +37,7 @@ public class ASMUtils {
     /**
      * Generates the instructions to push a non-static field onto the stack and box it in case it is a primitive.
      * This is just a handy shortcut. However, it requires a {@link GeneratorAdapter} method visitor.
-     * 
+     *
      * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
      * @param classType The {@link Type} of the class which contains the field.
      * @param fieldName The name of the field.
@@ -60,7 +60,7 @@ public class ASMUtils {
      * The object the operation should be performed on needs to be the topmost value on the stack when the generated instructions are entered.
      * The rest of the stack is ignored by the generated instructions.
      * Note that the generated instructions make sure to reconstruct the original stack at the end.
-     * 
+     *
      * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
      * @param add Whether the {@code addParent()} ({@code true}) or the {@code removeParent()} ({@code false}) method should be called.
      */
@@ -86,7 +86,7 @@ public class ASMUtils {
      * That is done by constructing a new wrapper using the original object as first and only constructor argument.
      * If the top stack value is {@code null}, nothing happens.
      * The rest of the stack is ignored by the generated instructions.
-     * 
+     *
      * @param mg The {@link MethodVisitor} that should be used to generate the instructions (must be a generator adapter).
      * @param wrapperType The {@link Type} of the wrapper that should be constructed.
      * @param wrapperConstructorArgType The type of the single argument of the wrapper constructor that should be called.

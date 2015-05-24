@@ -30,7 +30,7 @@ public class IllegalParentTypeException extends RuntimeException {
 
     /**
      * Creates a new illegal parent type exception.
-     * 
+     *
      * @param object The {@link ParentAware} object that was referenced by the disallowed given "parent" {@link Node}.
      * @param parent The disallowed "parent" node that referenced the given parent-aware object.
      */
@@ -42,7 +42,7 @@ public class IllegalParentTypeException extends RuntimeException {
 
     /**
      * Creates a new illegal parent type exception with a detail message that describes the error.
-     * 
+     *
      * @param object The {@link ParentAware} object that was referenced by the disallowed given "parent" {@link Node}.
      * @param parent The disallowed "parent" node that referenced the given parent-aware object.
      * @param message A detail message which describes the error that occurred.
@@ -57,7 +57,7 @@ public class IllegalParentTypeException extends RuntimeException {
 
     /**
      * Creates a new illegal parent type exception with the exception that caused the error.
-     * 
+     *
      * @param object The {@link ParentAware} object that was referenced by the disallowed given "parent" {@link Node}.
      * @param parent The disallowed "parent" node that referenced the given parent-aware object.
      * @param cause The exception which caused the error in the first place.
@@ -72,7 +72,7 @@ public class IllegalParentTypeException extends RuntimeException {
 
     /**
      * Creates a new illegal parent type exception with a detail message that describes the error and the exception that caused it.
-     * 
+     *
      * @param object The {@link ParentAware} object that was referenced by the disallowed given "parent" {@link Node}.
      * @param parent The disallowed "parent" node that referenced the given parent-aware object.
      * @param message A detail message which describes the error that occurred.
@@ -89,7 +89,7 @@ public class IllegalParentTypeException extends RuntimeException {
     /**
      * Returns the {@link ParentAware} object that was referenced by the disallowed "parent" {@link Node}.
      * Its {@link ParentAware#addParent(Node)} method probably threw this exception.
-     * 
+     *
      * @return The affected parent-aware object.
      */
     public ParentAware<?> getObject() {
@@ -99,7 +99,7 @@ public class IllegalParentTypeException extends RuntimeException {
 
     /**
      * Returns the disallowed "parent" {@link Node} which referenced the {@link ParentAware} returned by {@link #getObject()}.
-     * 
+     *
      * @return The disallowed "parent" node.
      */
     public Node<?> getParent() {

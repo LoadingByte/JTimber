@@ -49,7 +49,7 @@ public @interface SubstituteWithWrapper {
      * The exact type of the {@link Wrapper} stored in the annotated field.
      * It is used for creating new wrappers after JAXB unmarshalling.
      * See {@link SubstituteWithWrapper} for more information.
-     * 
+     *
      * @return The type of the wrapped stored in the annotated field.
      */
     Class<? extends Wrapper> value ();
@@ -59,7 +59,7 @@ public @interface SubstituteWithWrapper {
      * is the type of the first and only wrapper constructor argument (of the {@link #value() specified wrapper}).
      * However, that must not always be the case.
      * Therefore, this optional annotation property controls the type of the wrapper constructor argument.
-     * 
+     *
      * @return The type of the first and only wrapper constructor argument.
      */
     Class<?> wrapperConstructorArg () default Default.class;

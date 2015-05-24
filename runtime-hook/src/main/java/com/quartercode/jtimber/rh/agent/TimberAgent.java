@@ -38,7 +38,7 @@ import com.quartercode.jtimber.rh.agent.util.ResourceLister;
  * The javaagent which installs the bytecode manipulator using a {@link ClassFileTransformer} (the {@link TimberClassFileTransformer}).
  * The bytecode manipulator then adds extra bytecode for tracking the parents of parent-aware objects.
  * This agent is part of the runtime hook.
- * 
+ *
  * @see TimberClassFileTransformer
  */
 public class TimberAgent {

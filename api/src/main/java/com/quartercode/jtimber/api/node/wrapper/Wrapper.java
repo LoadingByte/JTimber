@@ -34,14 +34,14 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * Internally, the wrapper does its job by being parent-aware itself and setting the parents of all the parent-aware objects it is sees through
  * the separation layer (e.g. the collection) to its own parents.
  * Continuing the collection example (this time with lists), the user just needs to wrap his lists into list wrappers:
- * 
+ *
  * <pre>
  * private List&lt;SomeParentAwareObject&gt; list = new ListWrapper<>(new ArrayList&lt;SomeParentAwareObject&gt;());
  * </pre>
- * 
+ *
  * The user doesn't notice any difference and uses the list like any other list.
  * Internally, however, the list wrapper takes care of adjusting the parents of all parent-aware objects stored in the list.
- * 
+ *
  * @see AbstractWrapper
  * @see ArrayWrapper
  * @see CollectionWrapper
@@ -54,7 +54,7 @@ public interface Wrapper extends ParentAware<Node<?>> {
      * Note that this method should only be used for internal purposes.
      * Public access should be done through the custom methods provided by the wrapper implementation.
      * Otherwise, the wrapper functionality is bypassed and inconsistencies start to occur.
-     * 
+     *
      * @return The wrapped object.
      */
     public Object getInternallyWrapped();
@@ -71,7 +71,7 @@ public interface Wrapper extends ParentAware<Node<?>> {
      * Additionally, the returned list may contain {@code null} values.
      * In fact, it is recommended that {@code null} values are not filtered out by this method.
      * This behavior has also been chosen for efficiency reasons.
-     * 
+     *
      * @return The objects represented by the wrapper.
      *         The returned list may contain other wrappers and {@code null} values.
      */
@@ -79,7 +79,7 @@ public interface Wrapper extends ParentAware<Node<?>> {
 
     /**
      * Returns the {@link Object#hashCode() hash code} of the wrapped object.
-     * 
+     *
      * @return The hash code of the wrapped object.
      */
     @Override
@@ -88,7 +88,7 @@ public interface Wrapper extends ParentAware<Node<?>> {
     /**
      * Returns whether the given object {@link Object#equals(Object) equals} this object.
      * If the given object is a wrapper as well, the object wrapped by it is used for the equality check.
-     * 
+     *
      * @param obj The object which should be compared with this object.
      * @return Whether the given object is equal to this object.
      */
@@ -97,7 +97,7 @@ public interface Wrapper extends ParentAware<Node<?>> {
 
     /**
      * Returns the {@link Object#hashCode() string representation} of the wrapped object.
-     * 
+     *
      * @return The string representation of the wrapped object.
      */
     @Override

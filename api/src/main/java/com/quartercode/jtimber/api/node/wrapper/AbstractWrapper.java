@@ -28,7 +28,7 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * An abstract base implementation of the {@link Wrapper} interface (see that interface for more information on what wrappers are).
  * Note that this class is just a base class and does nothing on its own (apart from delegating calls to {@link #hashCode()}, {@link #equals(Object)} and {@link #toString()}).
  * For any actual parent-caretaking functionality, you must use specific wrapper implementations like {@link ArrayWrapper}, {@link CollectionWrapper}, or {@link ListWrapper}.
- * 
+ *
  * @see Wrapper
  */
 public abstract class AbstractWrapper extends DefaultParentAware<Node<?>> implements Wrapper {
@@ -37,7 +37,7 @@ public abstract class AbstractWrapper extends DefaultParentAware<Node<?>> implem
 
     /**
      * Creates a new abstract wrapper that wraps around the given object and only delegates calls to {@link #hashCode()}, {@link #equals(Object)} and {@link #toString()} to the wrapped object.
-     * 
+     *
      * @param wrapped The object the new abstract wrapper wraps around.
      */
     protected AbstractWrapper(Object wrapped) {

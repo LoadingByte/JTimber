@@ -24,7 +24,7 @@ import com.quartercode.jtimber.api.node.ParentAware;
 
 /**
  * This utility class contains some methods related to {@link ParentAware#getParents() parents} of {@link ParentAware} objects.
- * 
+ *
  * @see ParentAware
  */
 public class ParentUtils {
@@ -35,7 +35,7 @@ public class ParentUtils {
      * If that search is not successful, it calls this method recursively for each parent of the given parent-aware object.
      * The first one which finds a node of the requested type is returned as the result.
      * If absolutely no matching node can be found, {@code null} is returned.
-     * 
+     *
      * @param type The node type to search for.
      *        The returned node must be an instance of this type.
      * @param object The parent-aware object the search should be started on.

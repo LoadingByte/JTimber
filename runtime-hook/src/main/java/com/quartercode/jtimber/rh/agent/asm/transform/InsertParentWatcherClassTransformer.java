@@ -36,7 +36,7 @@ public final class InsertParentWatcherClassTransformer extends MetadataAwareClas
 
     /**
      * Creates a new insert parent watcher class transformer.
-     * 
+     *
      * @param cv The class visitor to which this visitor delegates method calls. May be {@code null}.
      * @param metadata The {@link ClassMetadata} object the transformer uses to retrieve metadata about the processed class.
      */
