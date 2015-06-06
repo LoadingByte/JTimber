@@ -112,7 +112,7 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
 
-        throw new UnsupportedOperationException("Sub lists of list wrappers are not supported yet");
+        return wrapped.subList(fromIndex, toIndex);
     }
 
 }

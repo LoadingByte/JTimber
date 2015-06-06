@@ -163,10 +163,26 @@ public class ListWrapperTest {
 
     // listIterator(int) with starting index is not tested because it is really similar to listIterator()
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test
     public void testSubList() {
 
-        wrapper.subList(0, 0);
+        wrapper.add(elem1);
+        wrapper.add(elem2);
+        wrapper.add(elem3);
+
+        // The sub list only contains elem1 and elem2
+        List<Node<?>> subList = wrapper.subList(0, 2);
+
+        subList.add(elem1);
+        subList.remove(elem2);
+
+        assertArrayEquals("Regular list elements after modifications", new Node[] { elem1, elem1, elem3 }, list.toArray());
+        assertArrayEquals("Sublist elements after modifications", new Node[] { elem1, elem1 }, subList.toArray());
+        assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1, elem1, elem3 }, wrapper.getActualChildren().toArray());
+
+        assertArrayEquals("Parents of element 1 after modifications", new Node[] { parent1, parent2, parent1, parent2 }, elem1.getParents().toArray());
+        assertArrayEquals("Parents of element 2 after modifications", new Node[0], elem2.getParents().toArray());
+        assertArrayEquals("Parents of element 3 after modifications", new Node[] { parent1, parent2 }, elem3.getParents().toArray());
     }
 
     // Basic delegates and methods covered by CollectionWrapper are not tested!
