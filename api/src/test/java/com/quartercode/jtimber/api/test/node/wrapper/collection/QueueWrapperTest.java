@@ -53,6 +53,20 @@ public class QueueWrapperTest {
         wrapper.offer(elem1);
         wrapper.offer(elem2);
 
+        assertAfterAddTest();
+    }
+
+    @Test
+    public void testAdd() {
+
+        wrapper.add(elem1);
+        wrapper.add(elem2);
+
+        assertAfterAddTest();
+    }
+
+    private void assertAfterAddTest() {
+
         assertArrayEquals("Queue elements after modifications", new Node[] { elem1, elem2 }, queue.toArray());
         assertArrayEquals("Actual children of wrapper after modifications", new Object[] { elem1, elem2 }, wrapper.getActualChildren().toArray());
 
@@ -63,9 +77,9 @@ public class QueueWrapperTest {
     @Test
     public void testRemoveAndPoll() {
 
-        wrapper.add(elem1);
-        wrapper.add(elem2);
-        wrapper.add(elem3);
+        wrapper.offer(elem1);
+        wrapper.offer(elem2);
+        wrapper.offer(elem3);
 
         assertEquals("First polled element (using 'remove()')", elem1, wrapper.remove());
         assertEquals("Second polled element (using 'poll()')", elem2, wrapper.poll());
