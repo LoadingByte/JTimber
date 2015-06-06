@@ -21,6 +21,7 @@ package com.quartercode.jtimber.api.node.wrapper.collection;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
+import com.quartercode.jtimber.api.internal.observ.collection.ObservableList;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
@@ -37,7 +38,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  */
 public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
 
-    private final List<E> wrapped;
+    private final ObservableList<E> wrapped;
 
     /**
      * Creates a new {@link List} {@link Wrapper} that wraps around the given list.
@@ -48,79 +49,40 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
 
         super(wrapped);
 
-        this.wrapped = wrapped;
+        this.wrapped = new ObservableList<>(wrapped);
+        this.wrapped.setObserver(new CopyParentsCollectionObserver(this));
     }
 
-    // ----- Overrides -----
+    // ----- Delegates -----
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
 
-        int indexCounter = index;
-        for (E element : c) {
-            add(indexCounter, element);
-            indexCounter++;
-        }
+        return wrapped.addAll(index, c);
+    }
 
-        return !c.isEmpty();
+    @Override
+    public E get(int index) {
+
+        return wrapped.get(index);
     }
 
     @Override
     public E set(int index, E element) {
 
-        E old = wrapped.set(index, element);
-
-        // If the setting was successful (no exception has been thrown), change the parents of the affected elements
-        removeElement(old);
-        addElement(element);
-
-        return old;
+        return wrapped.set(index, element);
     }
 
     @Override
     public void add(int index, E element) {
 
         wrapped.add(index, element);
-
-        // If the setting was successful (no exception has been thrown), change the parents of the added element
-        addElement(element);
     }
 
     @Override
     public E remove(int index) {
 
-        E old = wrapped.remove(index);
-
-        // If the setting was successful (no exception has been thrown), change the parents of the removed element
-        removeElement(old);
-
-        return old;
-    }
-
-    @Override
-    public ListIterator<E> listIterator() {
-
-        return new ListIteratorWrapper(wrapped.listIterator());
-    }
-
-    @Override
-    public ListIterator<E> listIterator(int index) {
-
-        return new ListIteratorWrapper(wrapped.listIterator(index));
-    }
-
-    @Override
-    public List<E> subList(int fromIndex, int toIndex) {
-
-        throw new UnsupportedOperationException("Sub lists of list wrappers are not supported yet");
-    }
-
-    // ----- Basic Delegates -----
-
-    @Override
-    public E get(int index) {
-
-        return wrapped.get(index);
+        return wrapped.remove(index);
     }
 
     @Override
@@ -135,72 +97,22 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
         return wrapped.lastIndexOf(o);
     }
 
-    /**
-     * An internal {@link ListIterator} implementation that wraps around a real list iterator and adjusts the parents of added and removed elements.
-     * It extends the {@link CollectionWrapper.IteratorWrapper} in order to inherit its basic functionality.
-     *
-     * @see ListWrapper
-     */
-    protected class ListIteratorWrapper extends IteratorWrapper implements ListIterator<E> {
+    @Override
+    public ListIterator<E> listIterator() {
 
-        private final ListIterator<E> wrapped;
+        return wrapped.listIterator();
+    }
 
-        /**
-         * Creates a new list iterator wrapper that wraps around the given {@link ListIterator}.
-         *
-         * @param wrapped The list iterator the new list iterator wrapper wraps around.
-         */
-        protected ListIteratorWrapper(ListIterator<E> wrapped) {
+    @Override
+    public ListIterator<E> listIterator(int index) {
 
-            super(wrapped);
+        return wrapped.listIterator(index);
+    }
 
-            this.wrapped = wrapped;
-        }
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
 
-        @Override
-        public boolean hasPrevious() {
-
-            return wrapped.hasPrevious();
-        }
-
-        @Override
-        public E previous() {
-
-            currentElement = wrapped.previous();
-            return currentElement;
-        }
-
-        @Override
-        public int nextIndex() {
-
-            return wrapped.nextIndex();
-        }
-
-        @Override
-        public int previousIndex() {
-
-            return wrapped.previousIndex();
-        }
-
-        @Override
-        public void set(E e) {
-
-            wrapped.set(e);
-
-            // If the setting was successful (no exception has been thrown), change the parents of the affected elements
-            removeElement(currentElement);
-            addElement(e);
-        }
-
-        @Override
-        public void add(E e) {
-
-            wrapped.add(e);
-
-            // If the setting was successful (no exception has been thrown), change the parents of the added element
-            addElement(e);
-        }
-
+        throw new UnsupportedOperationException("Sub lists of list wrappers are not supported yet");
     }
 
 }

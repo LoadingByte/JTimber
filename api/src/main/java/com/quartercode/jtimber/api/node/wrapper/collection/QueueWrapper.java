@@ -19,6 +19,7 @@
 package com.quartercode.jtimber.api.node.wrapper.collection;
 
 import java.util.Queue;
+import com.quartercode.jtimber.api.internal.observ.collection.ObservableQueue;
 import com.quartercode.jtimber.api.node.wrapper.Wrapper;
 
 /**
@@ -35,7 +36,7 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  */
 public class QueueWrapper<E> extends CollectionWrapper<E> implements Queue<E> {
 
-    private final Queue<E> wrapped;
+    private final ObservableQueue<E> wrapped;
 
     /**
      * Creates a new {@link Queue} {@link Wrapper} that wraps around the given queue.
@@ -46,40 +47,29 @@ public class QueueWrapper<E> extends CollectionWrapper<E> implements Queue<E> {
 
         super(wrapped);
 
-        this.wrapped = wrapped;
+        this.wrapped = new ObservableQueue<>(wrapped);
+        this.wrapped.setObserver(new CopyParentsCollectionObserver(this));
     }
 
-    // ----- Overrides -----
+    // ----- Delegates -----
 
     @Override
     public boolean offer(E e) {
 
-        boolean modified = wrapped.offer(e);
-
-        if (modified) {
-            addElement(e);
-        }
-
-        return modified;
+        return wrapped.offer(e);
     }
 
     @Override
     public E remove() {
 
-        E element = wrapped.remove();
-        removeElement(element);
-        return element;
+        return wrapped.remove();
     }
 
     @Override
     public E poll() {
 
-        E element = wrapped.poll();
-        removeElement(element);
-        return element;
+        return wrapped.poll();
     }
-
-    // ----- Basic Delegates -----
 
     @Override
     public E element() {
