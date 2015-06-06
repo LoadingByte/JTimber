@@ -55,15 +55,11 @@ public class ArrayWrapper<E> extends AbstractWrapper {
         this.wrapped = wrapped;
     }
 
-    // ----- Wrapper Methods -----
-
     @Override
     public Collection<?> getActualChildren() {
 
         return Collections.unmodifiableCollection(Arrays.asList((Object[]) wrapped));
     }
-
-    // ----- ParentAware Overrides -----
 
     @Override
     public void addParent(Node<?> parent) {

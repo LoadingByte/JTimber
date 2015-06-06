@@ -78,6 +78,6 @@ public class QueueWrapperTest {
         assertArrayEquals("Parents of element 3 after modifications", new Node[] { parent1, parent2 }, elem3.getParents().toArray());
     }
 
-    // Basic delegates and methods covered by CollectionWraper are not tested!
+    // Basic delegates and methods covered by CollectionWrapper are not tested!
 
 }

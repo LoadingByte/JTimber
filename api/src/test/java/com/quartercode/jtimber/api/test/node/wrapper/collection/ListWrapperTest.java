@@ -169,6 +169,6 @@ public class ListWrapperTest {
         wrapper.subList(0, 0);
     }
 
-    // Basic delegates and methods covered by CollectionWraper are not tested!
+    // Basic delegates and methods covered by CollectionWrapper are not tested!
 
 }

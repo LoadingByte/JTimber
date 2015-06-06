@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
-import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
 import com.quartercode.jtimber.api.node.wrapper.collection.CollectionWrapper;
-import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
 
 /**
  * A wrapper allows a {@link ParentAware} object to know its parents, although the two levels are separated by another object, e.g. a {@link Collection}.
@@ -43,9 +41,6 @@ import com.quartercode.jtimber.api.node.wrapper.collection.ListWrapper;
  * Internally, however, the list wrapper takes care of adjusting the parents of all parent-aware objects stored in the list.
  *
  * @see AbstractWrapper
- * @see ArrayWrapper
- * @see CollectionWrapper
- * @see ListWrapper
  */
 public interface Wrapper extends ParentAware<Node<?>> {
 

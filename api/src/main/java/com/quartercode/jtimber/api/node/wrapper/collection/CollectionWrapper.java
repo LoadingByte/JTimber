@@ -35,7 +35,6 @@ import com.quartercode.jtimber.api.node.wrapper.Wrapper;
  * @param <E> The type of elements in the wrapped collection.
  * @see Collection
  * @see Wrapper
- * @see ListWrapper
  */
 public class CollectionWrapper<E> extends AbstractWrapper implements Collection<E> {
 
@@ -53,15 +52,11 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
         this.wrapped = wrapped;
     }
 
-    // ----- Wrapper Methods -----
-
     @Override
     public Collection<?> getActualChildren() {
 
         return Collections.unmodifiableCollection(wrapped);
     }
-
-    // ----- ParentAware Overrides -----
 
     @Override
     public void addParent(Node<?> parent) {
@@ -86,8 +81,6 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
             }
         }
     }
-
-    // ----- Event Methods -----
 
     /**
      * Internal method that should be called whenever an object is added to the wrapped {@link Collection}.
