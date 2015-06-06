@@ -54,14 +54,6 @@ public class ListWrapper<E> extends CollectionWrapper<E> implements List<E> {
     // ----- Overrides -----
 
     @Override
-    @SuppressWarnings ("unchecked")
-    public List<Object> getActualChildren() {
-
-        // Performance improvement; this method no longer needs to check whether the wrapped collection is a list
-        return (List<Object>) (List<?>) wrapped;
-    }
-
-    @Override
     public boolean addAll(int index, Collection<? extends E> c) {
 
         int indexCounter = index;

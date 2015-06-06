@@ -19,7 +19,8 @@
 package com.quartercode.jtimber.api.node.wrapper.collection;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 import javax.xml.bind.annotation.XmlTransient;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
@@ -57,9 +58,9 @@ public class ArrayWrapper<E> extends AbstractWrapper {
     // ----- Wrapper Methods -----
 
     @Override
-    public List<Object> getActualChildren() {
+    public Collection<?> getActualChildren() {
 
-        return Arrays.asList((Object[]) wrapped);
+        return Collections.unmodifiableCollection(Arrays.asList((Object[]) wrapped));
     }
 
     // ----- ParentAware Overrides -----

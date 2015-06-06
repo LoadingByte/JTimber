@@ -18,10 +18,9 @@
 
 package com.quartercode.jtimber.api.node.wrapper.collection;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.AbstractWrapper;
@@ -57,10 +56,9 @@ public class CollectionWrapper<E> extends AbstractWrapper implements Collection<
     // ----- Wrapper Methods -----
 
     @Override
-    @SuppressWarnings ("unchecked")
-    public List<Object> getActualChildren() {
+    public Collection<?> getActualChildren() {
 
-        return (List<Object>) (List<?>) (wrapped instanceof List ? wrapped : new ArrayList<>(wrapped));
+        return Collections.unmodifiableCollection(wrapped);
     }
 
     // ----- ParentAware Overrides -----

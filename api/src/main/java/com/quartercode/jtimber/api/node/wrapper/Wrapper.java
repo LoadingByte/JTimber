@@ -19,7 +19,7 @@
 package com.quartercode.jtimber.api.node.wrapper;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import com.quartercode.jtimber.api.node.Node;
 import com.quartercode.jtimber.api.node.ParentAware;
 import com.quartercode.jtimber.api.node.wrapper.collection.ArrayWrapper;
@@ -61,21 +61,22 @@ public interface Wrapper extends ParentAware<Node<?>> {
 
     /**
      * Returns the objects represented by the wrapper.
-     * For example, if the wrapper wraps around a collection, this method would return all elements of that collection.<br>
+     * For example, if the wrapper wraps around an array, this method would return all elements of that array.<br>
      * <br>
      * Note that this method should not further resolve the actual children.
      * To continue the example, this method should not check whether any of the elements is another wrapper and add the children of that wrapper.
      * Instead, it should just add the wrapper element itself.
      * This behavior has been chosen for efficiency reasons.<br>
      * <br>
-     * Additionally, the returned list may contain {@code null} values.
+     * Additionally, the returned collection may contain {@code null} values.
      * In fact, it is recommended that {@code null} values are not filtered out by this method.
-     * This behavior has also been chosen for efficiency reasons.
+     * Moreover, the collection is allowed to be {@link Collections#unmodifiableCollection(Collection) unmodifiable} in order to avoid creating totally new collections.
+     * Those behaviors have also been chosen for efficiency reasons.
      *
      * @return The objects represented by the wrapper.
-     *         The returned list may contain other wrappers and {@code null} values.
+     *         The returned collection may contain other wrappers and {@code null} values.
      */
-    public List<Object> getActualChildren();
+    public Collection<?> getActualChildren();
 
     /**
      * Returns the {@link Object#hashCode() hash code} of the wrapped object.
