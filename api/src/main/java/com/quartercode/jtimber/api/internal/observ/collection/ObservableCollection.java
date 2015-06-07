@@ -18,6 +18,7 @@
 
 package com.quartercode.jtimber.api.internal.observ.collection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -124,12 +125,15 @@ public class ObservableCollection<E> extends AbstractObservableCollection implem
     @Override
     public void clear() {
 
-        for (E element : wrapped) {
-            getObserver().onRemove(element);
-        }
+        Collection<E> elements = new ArrayList<>(this);
 
         // Actualy clear the collection
         wrapped.clear();
+
+        // If the clearing was successful (no exception has been thrown), inform the observer about the removed elements
+        for (E element : elements) {
+            getObserver().onRemove(element);
+        }
     }
 
     // ----- Basic Delegates -----

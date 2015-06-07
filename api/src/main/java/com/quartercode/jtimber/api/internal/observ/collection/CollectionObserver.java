@@ -29,7 +29,7 @@ import java.util.Map;
 public interface CollectionObserver {
 
     /**
-     * This callback is invoked whenever an object is added to the {@link AbstractObservableCollection observable collection} this class is assigned to.
+     * This callback is invoked <b>after</b> a new object has been added to the {@link AbstractObservableCollection observable collection} this class is assigned to.
      * In case of a {@link Map}, both keys and values are sent through this method when they are added.
      *
      * @param object The object that is added to the underlying collection.
@@ -37,7 +37,7 @@ public interface CollectionObserver {
     public void onAdd(Object object);
 
     /**
-     * This callback is invoked whenever an object is removed from the {@link AbstractObservableCollection observable collection} this class is assigned to.
+     * This callback is invoked <b>after</b> an object has been removed from the {@link AbstractObservableCollection observable collection} this class is assigned to.
      * In case of a {@link Map}, both keys and values are sent through this method when they are remove.
      *
      * @param object The object that is removed from the underlying collection.
