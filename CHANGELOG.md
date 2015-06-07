@@ -3,7 +3,12 @@
 
 ### Additions
 * CollectionWrapper, ListWrapper and ArrayWrapper now accept all objects as elements (and not just parent-aware objects).
-* Replace the WeakPAReference with the @Weak annotation on fields. The runtime hook directly interprets the annotation.
+* Added a proper implementation of subList() to ListWrapper.
+* Added a new SetWrapper that wraps around sets.
+* Added a new QueueWrapper that wraps around queues.
+* Added a new MapWrapper that wraps around maps.
+* Extracted the wrapper logic which generically observes collections and doesn't care about parents etc. into separate internal classes.
+* Replaced the WeakPAReference with the @Weak annotation on fields. The runtime hook directly interprets the annotation.
 * Added the ParentAware.getSingleParent() method for scenarios where a certain parent-aware object should only have one parent.
 * Added the ParentUtils utility class related to the parents of parent-aware objects.
 * @SubstituteWithWrapper fields now also wrap objects when they are set. Therefore, no explicit wrapper creation is necessary anymore.
