@@ -89,6 +89,7 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
             if (allowedParent || allowedParentClass == TypeResolver.Unknown.class) {
                 // This unchecked cast cannot be avoided; however, the check above should have filtered out any disallowed parent
                 parents.add((P) parent);
+                onAddParent((P) parent);
             } else {
                 throw new IllegalParentTypeException(this, parent, "Nodes of type '" + parent.getClass().getName() + "' are not allowed to reference parent-aware objects of type '" + getClass().getName() + "',"
                         + "with latter only accepting '" + allowedParentClass.getName() + "' parents");
@@ -96,10 +97,32 @@ public class DefaultParentAware<P extends Node<?>> implements ParentAware<P> {
         }
     }
 
+    /**
+     * This listener method is called whenever the {@link #getParents() parents list} changed because a {@link Node} has been <b>added</b> to it.
+     * Note that the method is invoked <b>after</b> parent has been added to the parents list.
+     *
+     * @param parent The parent node which has just been added to the parents list. It may not be {@code null}.
+     */
+    protected void onAddParent(P parent) {
+
+    }
+
+    @SuppressWarnings ("unchecked")
     @Override
     public void removeParent(Node<?> parent) {
 
         parents.remove(parent);
+        onRemoveParent((P) parent);
+    }
+
+    /**
+     * This listener method is called whenever the {@link #getParents() parents list} changed because a {@link Node} has been <b>removed</b> from to it.
+     * Note that the method is invoked <b>after</b> parent has been removed from the parents list.
+     *
+     * @param parent The parent node which has just been removed from the parents list. It may not be {@code null}.
+     */
+    protected void onRemoveParent(P parent) {
+
     }
 
 }
